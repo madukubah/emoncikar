@@ -74,6 +74,7 @@
                     echo form_dropdown( $form );
                     break;
             }
+
         ?>
         </div>
     </div>

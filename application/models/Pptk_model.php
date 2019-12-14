@@ -1,13 +1,13 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Group_model extends MY_Model
+class Pptk_model extends MY_Model
 {
-  protected $table = "groups";
+  protected $table = "pptk";
 
   function __construct() {
       parent::__construct( $this->table );
-      parent::set_join_key( 'menu_id' );
+      parent::set_join_key( 'pptk_id' );
   }
 
   /**
@@ -71,7 +71,7 @@ class Group_model extends MY_Model
   {
     //foreign
     //delete_foreign( $data_param. $models[]  )
-    if( !$this->delete_foreign( $data_param, ['menu_model'] ) )
+    if( !$this->delete_foreign( $data_param ) )
     {
       $this->set_error("gagal");//('group_delete_unsuccessful');
       return FALSE;
@@ -97,11 +97,11 @@ class Group_model extends MY_Model
     /**
    * group
    *
-   * @param int|array|null $id = id_groups
+   * @param int|array|null $id = id_pptk
    * @return static
    * @author madukubah
    */
-  public function group( $id = NULL  )
+  public function pptk( $id = NULL  )
   {
       if (isset($id))
       {
@@ -111,19 +111,32 @@ class Group_model extends MY_Model
       $this->limit(1);
       $this->order_by($this->table.'.id', 'desc');
 
-      $this->groups(  );
+      $this->pptk(  );
 
       return $this;
   }
+  // /**
+  //  * pptk
+  //  *
+  //  *
+  //  * @return static
+  //  * @author madukubah
+  //  */
+  // public function pptk(  )
+  // {
+      
+  //     $this->order_by($this->table.'.id', 'asc');
+  //     return $this->fetch_data();
+  // }
 
   /**
-   * groups
+   * pptk
    *
    *
    * @return static
    * @author madukubah
    */
-  public function groups( $start = 0 , $limit = NULL )
+  public function pptks( $start = 0 , $limit = NULL )
   {
       if (isset( $limit ))
       {
