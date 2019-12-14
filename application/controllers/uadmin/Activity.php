@@ -21,6 +21,49 @@ class Activity extends Uadmin_Controller {
 		$this->data["menu_list_id"] = "activity_index";
 
 	}
+
+	public function upload_photo()
+	{
+		$image_name = ["0", "25", "50", "75", "100"];
+		$name = $image_name[$this->input->post('image_index')];
+
+		$activity_id = $this->input->post('activity_id');
+		$activity = $this->activity_model->activity( $activity_id )->row();
+		// upload photo		
+		$this->load->library('upload'); // Load librari upload
+		$config = $this->services->get_photo_upload_config($name);
+
+		$this->upload->initialize($config);
+		// echo var_dump( $_FILES['images'] ); return;
+		// if( $_FILES['image']['name'] != "" )
+		if ($this->upload->do_upload("image")) {
+			$image		 	= $this->upload->data()["file_name"];
+
+			if ($this->input->post('old_image') != "default.jpg")
+				if (!@unlink($config['upload_path'] . $this->input->post('old_image'))) { };
+
+			$images = explode(";", $activity->images);
+
+			$images[$this->input->post('image_index')] = $image;
+			$data['images'] 	= implode(";", $images);
+		} else {
+			// $data['image'] = "default.png";
+			$this->session->set_flashdata('alert', $this->alert->set_alert(Alert::DANGER, $this->upload->display_errors()));
+			redirect(site_url($this->current_page) . "detail/" . $activity->id);
+		}
+
+		$data_param["id"] = $this->input->post('activity_id');
+		// echo var_dump( $data ); return ;
+		if ($this->activity_model->update($data, $data_param)) {
+			$this->session->set_flashdata('alert', $this->alert->set_alert(Alert::SUCCESS, $this->activity_model->messages()));
+		} else {
+			$this->session->set_flashdata('alert', $this->alert->set_alert(Alert::DANGER, $this->activity_model->errors()));
+		}
+
+		redirect(site_url($this->current_page) . "detail/" . $activity->id);
+		// redirect(site_url( "officer/civilization/detail/") . $activity->civilization_id );
+	}
+
 	public function index()
 	{
 		$page = ($this->uri->segment(4)) ? ($this->uri->segment(4) -  1 ) : 0;
@@ -295,7 +338,8 @@ class Activity extends Uadmin_Controller {
 			break;
 			case "galleries" :
 				$table = $this->services->get_photo_table_config( $this->current_page );
-				$table[ "rows" ] = $this->services->photo_data_test() ;//$this->group_model->groups( $pagination['start_record'], $pagination['limit_per_page'] )->result();
+				$table[ "rows" ] = $this->activity_model->_fetch_data( $start = 0 , $limit = NULL, $pptk_id )->result();
+				$table["image_url"] =  base_url("uploads/progress/");
 				$table = $this->load->view('user/activity/sub_package/photo_table', $table, true);
 				$this->data[ "contents" ] = $form_filter.$table;
 			break;
@@ -330,47 +374,36 @@ class Activity extends Uadmin_Controller {
         $this->form_validation->set_rules( $this->services->get_validation_config() );
         if ($this->form_validation->run() === TRUE  )
         {
-			$data['title'] = $this->input->post( 'title' );
-			$data['nomenclature_id'] = $this->input->post( 'nomenclature_id' );
-			$data['quantity'] = $this->input->post( 'quantity' );
-			$data['unit'] = $this->input->post( 'unit' );
-			$data['year'] = $this->input->post( 'year' );
-			$data['ceiling_budget'] = $this->input->post( 'ceiling_budget' );
-			$data['ceiling_rpm'] = $this->input->post( 'ceiling_rpm' );
-			$data['ceiling_pln'] = $this->input->post( 'ceiling_pln' );
-			$data['location'] = $this->input->post( 'location' );
-			$data['pptk_id'] = $this->input->post( 'pptk_id' );
+			$data['title'] 				= $this->input->post( 'title' );
+			$data['nomenclature_id'] 	= $this->input->post( 'nomenclature_id' );
+			$data['AuFnF'] 				= $this->input->post( 'AuFnF' );
+			$data['quantity'] 			= $this->input->post( 'quantity' );
+			$data['unit'] 				= $this->input->post( 'unit' );
+			$data['year'] 				= $this->input->post( 'year' );
+			$data['ceiling_budget'] 	= $this->input->post( 'ceiling_budget' );
+			$data['ceiling_rpm'] 		= $data['ceiling_budget'] ;// $this->input->post( 'ceiling_rpm' );
+			$data['ceiling_pln'] 		= 0; //$this->input->post( 'ceiling_pln' );
+			$data['location'] 			= $this->input->post( 'location' );
+			$data['pptk_id'] 			= $this->input->post( 'pptk_id' );
+			$data['latitude'] 			= $this->input->post( 'latitude' );
+			$data['longitude'] 			= $this->input->post( 'longitude' );
+			$data['images'] 			= "default.jpg;default.jpg;default.jpg;default.jpg;default.jpg";
 			
 			if(  $activity_id = $this->activity_model->create( $data ) )
 			{
 				$budget_arr = array();
 				$sum = 0;
-				foreach( $this->input->post( 'budget_plan_rpm[]' ) as $index => $budget_plan_rpm )
+				foreach( $this->input->post( 'budget[]' ) as $index => $budget )
 				{
-					if( ! ( $budget_plan_rpm == '0' || $budget_plan_rpm == '' ) )
+					if( ! ( $budget == '0' || $budget == '' ) )
 					{
-						$sum += $budget_plan_rpm;
+						$sum += $budget;
 						$budget_arr []= array(
 							'activity_id' => $activity_id,
-							'nominal' => $budget_plan_rpm,
+							'nominal' => $budget,
 							'month' => $index + 1,
 							'year' => $data['year'] ,
 							'rpm_pln' => 0 , // 0 = rpm ; 1 = pln 
-							'status' => 0 , // 0 = planning ; 1 = realization
-						);
-					}
-					// pln
-					$budget_plan_pln = $this->input->post( 'budget_plan_pln[]' )[ $index ];	
-					if( ! ( $budget_plan_pln == '0' || $budget_plan_pln == '' ) )
-					{
-						$sum += $budget_plan_pln;
-						// pln
-						$budget_arr []= array(
-							'activity_id' => $activity_id,
-							'nominal' => $budget_plan_pln ,
-							'month' => $index + 1,
-							'year' => $data['year'] ,
-							'rpm_pln' => 1 , // 0 = rpm ; 1 = pln 
 							'status' => 0 , // 0 = planning ; 1 = realization
 						);
 					}
@@ -389,14 +422,14 @@ class Activity extends Uadmin_Controller {
 				###############################################################
 				$physical_arr = array();
 				$sum = 0;
-				foreach( $this->input->post( 'physical_plan[]' ) as $index => $physical_plan )
+				foreach( $this->input->post( 'physical[]' ) as $index => $physical )
 				{
-					if( ! ( $physical_plan == '0' || $physical_plan == '' ) )
+					if( ! ( $physical == '0' || $physical == '' ) )
 					{
-						$sum += $physical_plan;
+						$sum += $physical;
 						$physical_arr []= array(
 							'activity_id' => $activity_id,
-							'progress' => $physical_plan,
+							'progress' => $physical,
 							'month' => $index + 1,
 							'year' => $data['year'] ,
 							'status' => 0 , // 0 = planning ; 1 = realization
@@ -432,12 +465,11 @@ class Activity extends Uadmin_Controller {
 			$form_data_1 = $this->services->get_form_data()[1];
 			$form_data_1 = $this->load->view('templates/form/plain_form_6', $form_data_1 , TRUE ) ;
 			
-			$form_data_2 = $this->services->get_form_data()[2];
-            $form_data_2 = $this->load->view('templates/form/plain_form_6', $form_data_2 , TRUE ) ;
+			$form_data_3 = $this->services->get_form_data()[3];
+            $form_data_3 = $this->load->view('templates/form/plain_form_6', $form_data_3 , TRUE ) ;
 
-			$this->data[ "contents" ] =  $form_data;
-			// $this->data[ "contents" ] .=  '<div class="text-left" > <strong id="ceiling_message" >Sisa : </strong> </div>';
-			$this->data[ "contents" ] .=  $form_data_2.$form_data_1;
+			$this->data[ "contents" ] =  $form_data.$form_data_1.$form_data_3;;
+			// $this->data[ "contents" ] .=  $form_data_3.$form_data_1;
 			
 			$table = $this->services->get_planning_table_config( $this->current_page );
 			$table[ "rows" ] =  array();//$this->services->planning_data_test() ;//$this->group_model->groups( $pagination['start_record'], $pagination['limit_per_page'] )->result();
@@ -447,7 +479,7 @@ class Activity extends Uadmin_Controller {
 			$table = $this->services->get_planning_table_config( $this->current_page );
 			$table[ "rows" ] =  array();//$this->services->planning_data_test() ;//$this->group_model->groups( $pagination['start_record'], $pagination['limit_per_page'] )->result();
 			$table = $this->load->view('user/activity/sub_package/physical_planning_input', $table, true);
-			$this->data[ "physical" ] = $table;
+			$this->data[ "physical" ] = '';//$table;
 
 			$alert = $this->session->flashdata('alert');
 			$this->data["key"] = $this->input->get('key', FALSE);
@@ -462,6 +494,9 @@ class Activity extends Uadmin_Controller {
 
 	public function detail( $activity_id = NULL )
 	{
+		$activity = $this->activity_model->activity( $activity_id )->row();
+		if ($activity == NULL) redirect(site_url($this->current_page));
+
 		$form = $this->services->get_form_data( $activity_id );
 
 		if( ($_POST) ) 
@@ -475,47 +510,33 @@ class Activity extends Uadmin_Controller {
 			##############################################
 			$budget_arr = array();
 			$sum = 0;
-			foreach( $this->input->post( 'budget_plan_rpm[]' ) as $index => $budget_plan_rpm )
+			foreach( $this->input->post( 'budget[]' ) as $index => $budget )
 			{
-				if( ! ( $budget_plan_rpm == '0' || $budget_plan_rpm == '' ) )
+				if( ! ( $budget == '0' || $budget == '' ) )
 				{
-					$sum += $budget_plan_rpm;
+					$sum += $budget;
 					$budget_arr []= array(
 						'activity_id' => $activity_id,
-						'nominal' => $budget_plan_rpm,
+						'nominal' => $budget,
 						'month' => $index + 1,
 						'year' => $data['year'] ,
 						'rpm_pln' => 0 , // 0 = rpm ; 1 = pln 
 						'status' => 1 , // 0 = planning ; 1 = realization
 					);
 				}
-				// pln
-				$budget_plan_pln = $this->input->post( 'budget_plan_pln[]' )[ $index ];	
-				if( ! ( $budget_plan_pln == '0' || $budget_plan_pln == '' ) )
-				{
-					$sum += $budget_plan_pln;
-					// pln
-					$budget_arr []= array(
-						'activity_id' => $activity_id,
-						'nominal' => $budget_plan_pln ,
-						'month' => $index + 1,
-						'year' => $data['year'] ,
-						'rpm_pln' => 1 , // 0 = rpm ; 1 = pln 
-						'status' => 1 , // 0 = planning ; 1 = realization
-					);
-				}
 			}
 
+			###############################################################
 			$physical_arr = array();
 			$physical_sum = 0;
-			foreach( $this->input->post( 'physical_plan[]' ) as $index => $physical_plan )
+			foreach( $this->input->post( 'physical[]' ) as $index => $physical )
 			{
-				if( ! ( $physical_plan == '0' || $physical_plan == '' ) )
+				if( ! ( $physical == '0' || $physical == '' ) )
 				{
-					$physical_sum += $physical_plan;
+					$physical_sum += $physical;
 					$physical_arr []= array(
 						'activity_id' => $activity_id,
-						'progress' => $physical_plan,
+						'progress' => $physical,
 						'month' => $index + 1,
 						'year' => $data['year'] ,
 						'status' => 1 , // 0 = planning ; 1 = realization
@@ -530,7 +551,7 @@ class Activity extends Uadmin_Controller {
 
 			if(  $this->physical_model->create_batch( $physical_arr ) &&  $this->budget_model->create_batch( $budget_arr )  )
 			{
-				$this->session->set_flashdata('alert', $this->alert->set_alert( Alert::SUCCESS, $this->activity_model->messages() ) );
+				$this->session->set_flashdata('alert', $this->alert->set_alert( Alert::SUCCESS, 'berhasil' ) );
 				redirect( site_url( $this->current_page ). 'detail/' . $activity_id  );
 				return;
 			}else{
@@ -550,38 +571,35 @@ class Activity extends Uadmin_Controller {
 		$form_data_1 = $form[1];
 		$form_data_1 = $this->load->view('templates/form/plain_form_readonly_6', $form_data_1 , TRUE ) ;
 		
-		$form_data_2 = $form[2];
-		$form_data_2 = $this->load->view('templates/form/plain_form_readonly_6', $form_data_2 , TRUE ) ;
+		$form_data_3 = $form[3];
+		$form_data_3 = $this->load->view('templates/form/plain_form_readonly_6', $form_data_3 , TRUE ) ;
 		$this->data[ "contents" ] =  $form_data;
-		$this->data[ "contents" ] .=  $form_data_2.$form_data_1;
+		$this->data[ "contents" ] .=  $form_data_1.$form_data_3;
 
 		$this->data[ "planning" ] = "";
 		$this->data[ "physical" ] = "";
 
 		$table = $this->services->get_month_table_config( $this->current_page );
-		$budget_plan_rpm = $this->budget_model->budget_by_activity_id( $activity_id,  0, 0 )->row();
-		$budget_plan_rpm->title = 'RPM ( Ribu )';
-		$budget_plan_pln = $this->budget_model->budget_by_activity_id( $activity_id,  0, 1 )->row();
-		$budget_plan_pln->title = 'PLN ( Ribu )';
+		$budget_plan = $this->budget_model->budget_by_activity_id( $activity_id,  0 )->row();
+		$budget_plan->title = 'KEUANGAN ( Ribu )';
+		
 		$physical_plan = $this->physical_model->physical_by_activity_id( $activity_id,  0 )->row();
 		$physical_plan = $this->services->get_physical_prefix_sum( $physical_plan );
-		$physical_plan->title = 'Fisik';
+		$physical_plan->title = 'FISIK';
 
-		$table[ "rows" ] =[ $budget_plan_rpm, $budget_plan_pln, $physical_plan ] ; //$this->services->get_budget_physical_row( $budget_plan_rpm, $budget_plan_pln, $physica_plan );
+		$table[ "rows" ] =[ $budget_plan, $physical_plan ] ; //$this->services->get_budget_physical_row( $budget_plan, $budget_plan_pln, $physica_plan );
 		$table = $this->load->view('templates/tables/plain_table', $table, true);
 		$this->data[ "planning_table" ] = $table ;
 		#REALISASI REALISASI REALISASI REALISASI
 		$table = NULL;
 		$table = $this->services->get_month_table_config( $this->current_page );
-		$budget_realization_rpm = $this->budget_model->budget_by_activity_id( $activity_id,  1, 0 )->row();
-		$budget_realization_rpm->title = 'RPM ( Ribu )';
-		$budget_realization_pln = $this->budget_model->budget_by_activity_id( $activity_id,  1, 1 )->row();
-		$budget_realization_pln->title = 'PLN ( Ribu )';
+		$budget_realization = $this->budget_model->budget_by_activity_id( $activity_id,  1 )->row();
+		$budget_realization->title = 'KEUANGAN ( Ribu )';
 		$physical_realization = $this->physical_model->physical_by_activity_id( $activity_id,  1 )->row();
 		$physical_realization = $this->services->get_physical_prefix_sum( $physical_realization );
-		$physical_realization->title = 'Fisik';
+		$physical_realization->title = 'FISIK';
 		
-		$table[ "rows" ] = [ $budget_realization_rpm, $budget_realization_pln, $physical_realization ] ; //$this->services->get_budget_physical_row( $budget_plan_rpm, $budget_plan_pln, $physica_plan );
+		$table[ "rows" ] = [ $budget_realization, $physical_realization ] ; //$this->services->get_budget_physical_row( $budget_plan_rpm, $budget_plan_pln, $physica_plan );
 		$table = $this->load->view('templates/tables/plain_table', $table, true);
 		$this->data[ "realization_table" ] = $table ;
 
@@ -599,19 +617,98 @@ class Activity extends Uadmin_Controller {
 		# EDIT REALIZATION
 		####################################################
 		$table = $this->services->get_planning_table_config( $this->current_page );
-		$table[ "budget_plan_rpm" ] = $budget_realization_rpm;
-		$table[ "budget_plan_pln" ] = $budget_realization_pln;
-		$table[ "rows" ] =  array();//$this->services->planning_data_test() ;//$this->group_model->groups( $pagination['start_record'], $pagination['limit_per_page'] )->result();
+		$table[ "budget" ] = $budget_realization;
+		$physical_realization = $this->physical_model->physical_by_activity_id( $activity_id,  1 )->row();
+		$table[ "physical" ] = $physical_realization;
 		$table = $this->load->view('user/activity/sub_package/budget_planning_input', $table, true);
 		$this->data[ "planning" ] = $table;
 
-		$table = $this->services->get_planning_table_config( $this->current_page );
-		$physical_realization = $this->physical_model->physical_by_activity_id( $activity_id,  1 )->row();
-		$table[ "physical_plan" ] = $physical_realization;
-		$table = $this->load->view('user/activity/sub_package/physical_planning_input', $table, true);
-		$this->data[ "physical" ] = $table;
 		####################################################
 		# EDIT REALIZATION
+		####################################################
+		####################################################
+		# PHOTO
+		####################################################
+		$activity = $this->activity_model->activity( $activity_id )->row();
+		$this->data["image_url"] =  base_url("uploads/progress/");
+		$this->data["activity"] =  $activity;
+
+		$images = explode(";", $activity->images);
+		$images_arr = array();
+		$image_url = $this->services->get_photo_upload_config("")["image_path"];
+		foreach ($images as $i => $image) :
+			// echo $image_url; die;
+			$edit_photo = array(
+				"name" => "Ganti Gambar",
+				"modal_id" => "edit_photo_" . $i,
+				"button_color" => "primary",
+				"url" => site_url($this->current_page . "upload_photo/"),
+				"form_data" => array(
+
+					"image" => array(
+						'type' => 'file',
+						'label' => "Foto",
+						'value' => "",
+					),
+					"name" => array(
+						'type' => 'hidden',
+						'label' => "name",
+						'value' => substr($image, 0, strpos($image, ".")),
+					),
+					"activity_id" => array(
+						'type' => 'hidden',
+						'label' => "activity_id",
+						'value' => $activity->id,
+					),
+					"image_index" => array(
+						'type' => 'hidden',
+						'label' => "image_index",
+						'value' => $i,
+					),
+					"old_image" => array(
+						'type' => 'hidden',
+						'label' => "old_image",
+						'value' => $image,
+					),
+					'data' => NULL
+				),
+			);
+
+			$edit_photo_html = $this->load->view('templates/actions/modal_form_multipart', $edit_photo, true);
+			$images_arr[] = (object) array(
+				"image_url" 		=> $image_url . $image,
+				"edit_photo_html" 	=> $edit_photo_html,
+			);
+		endforeach;
+		$this->data["images_arr"] =  $images_arr;
+
+		####################################################
+		# PHOTO
+		####################################################
+		####################################################
+		# DELETE
+		####################################################
+		$modal_add = array(
+			"name" => "Hapus",
+			"modal_id" => "add_civilization_",
+			"button_color" => "danger",
+			"url" => site_url($this->current_page . "delete/"),
+			"param" => "id",
+			"form_data" => array(
+				"id" => array(
+					'type' => 'hidden',
+					'label' => "id",
+				  ),
+			),
+			"title" => "Kegiatan",
+        	"data_name" => "title",
+			'data' => $activity
+		);
+
+		$modal_add = $this->load->view('templates/actions/modal_delete', $modal_add, true);
+		$this->data["header_button"] .=  $modal_add;
+		####################################################
+		# DELETE
 		####################################################
 		$alert = $this->session->flashdata('alert');
 		$this->data["key"] = $this->input->get('key', FALSE);
@@ -630,72 +727,62 @@ class Activity extends Uadmin_Controller {
         $this->form_validation->set_rules( $this->services->get_validation_config() );
         if ($this->form_validation->run() === TRUE  )
         {
-			$data['title'] = $this->input->post( 'title' );
-			$data['nomenclature_id'] = $this->input->post( 'nomenclature_id' );
-			$data['quantity'] = $this->input->post( 'quantity' );
-			$data['unit'] = $this->input->post( 'unit' );
-			$data['year'] = $this->input->post( 'year' );
-			$data['ceiling_budget'] = $this->input->post( 'ceiling_budget' );
-			$data['ceiling_rpm'] = $this->input->post( 'ceiling_rpm' );
-			$data['ceiling_pln'] = $this->input->post( 'ceiling_pln' );
-			$data['location'] = $this->input->post( 'location' );
-			$data['pptk_id'] = $this->input->post( 'pptk_id' );
+			$data['title'] 				= $this->input->post( 'title' );
+			$data['nomenclature_id'] 	= $this->input->post( 'nomenclature_id' );
+			$data['AuFnF'] 				= $this->input->post( 'AuFnF' );
+			$data['quantity'] 			= $this->input->post( 'quantity' );
+			$data['unit'] 				= $this->input->post( 'unit' );
+			$data['year'] 				= $this->input->post( 'year' );
+			$data['ceiling_budget'] 	= $this->input->post( 'ceiling_budget' );
+			$data['ceiling_rpm'] 		= $data['ceiling_budget'] ;// $this->input->post( 'ceiling_rpm' );
+			$data['ceiling_pln'] 		= 0; //$this->input->post( 'ceiling_pln' );
+			$data['location'] 			= $this->input->post( 'location' );
+			$data['pptk_id'] 			= $this->input->post( 'pptk_id' );
+			$data['latitude'] 			= $this->input->post( 'latitude' );
+			$data['longitude'] 			= $this->input->post( 'longitude' );
 			##############################################
 			# PLANNING VALIDATION
 			##############################################
 			$budget_arr = array();
 			$sum = 0;
-			foreach( $this->input->post( 'budget_plan_rpm[]' ) as $index => $budget_plan_rpm )
+			foreach( $this->input->post( 'budget[]' ) as $index => $budget )
 			{
-				if( ! ( $budget_plan_rpm == '0' || $budget_plan_rpm == '' ) )
+				if( ! ( $budget == '0' || $budget == '' ) )
 				{
-					$sum += $budget_plan_rpm;
+					$sum += $budget;
 					$budget_arr []= array(
 						'activity_id' => $activity_id,
-						'nominal' => $budget_plan_rpm,
+						'nominal' => $budget,
 						'month' => $index + 1,
 						'year' => $data['year'] ,
 						'rpm_pln' => 0 , // 0 = rpm ; 1 = pln 
 						'status' => 0 , // 0 = planning ; 1 = realization
 					);
 				}
-				// pln
-				$budget_plan_pln = $this->input->post( 'budget_plan_pln[]' )[ $index ];	
-				if( ! ( $budget_plan_pln == '0' || $budget_plan_pln == '' ) )
-				{
-					$sum += $budget_plan_pln;
-					// pln
-					$budget_arr []= array(
-						'activity_id' => $activity_id,
-						'nominal' => $budget_plan_pln ,
-						'month' => $index + 1,
-						'year' => $data['year'] ,
-						'rpm_pln' => 1 , // 0 = rpm ; 1 = pln 
-						'status' => 0 , // 0 = planning ; 1 = realization
-					);
-				}
 			}
 
+			###############################################################
 			$physical_arr = array();
 			$physical_sum = 0;
-			foreach( $this->input->post( 'physical_plan[]' ) as $index => $physical_plan )
+			foreach( $this->input->post( 'physical[]' ) as $index => $physical )
 			{
-				if( ! ( $physical_plan == '0' || $physical_plan == '' ) )
+				if( ! ( $physical == '0' || $physical == '' ) )
 				{
-					$physical_sum += $physical_plan;
+					$physical_sum += $physical;
 					$physical_arr []= array(
 						'activity_id' => $activity_id,
-						'progress' => $physical_plan,
+						'progress' => $physical,
 						'month' => $index + 1,
 						'year' => $data['year'] ,
 						'status' => 0 , // 0 = planning ; 1 = realization
 					);
 				}	
 			}
+
 			if( $sum != $data['ceiling_budget'] || $physical_sum != 100 )
 			{
 				$this->session->set_flashdata('alert', $this->alert->set_alert( Alert::DANGER, 'rencana anggaran tidak sesuai pagu !' ) );
-				redirect( site_url( $this->current_page ). 'add/'  );
+				redirect( site_url( $this->current_page ). 'edit/'.$this->input->post( 'id' )  );
 				return;
 			}
 			##############################################
@@ -735,31 +822,26 @@ class Activity extends Uadmin_Controller {
             $form = $this->services->get_form_data( $activity_id );
 
 			$form_data = $form[0];
+			$form_data["form_data"]['nomenclature_id']['readonly'] = 'readonly';
 			$form_data = $this->load->view('templates/form/plain_form', $form_data , TRUE ) ;
 			
 			$form_data_1 = $form[1];
+			
+			$form_data_1["form_data"]['pptk_id']['readonly'] = 'readonly';
 			$form_data_1 = $this->load->view('templates/form/plain_form_6', $form_data_1 , TRUE ) ;
 			
-			$form_data_2 = $form[2];
-			$form_data_2 = $this->load->view('templates/form/plain_form_6', $form_data_2 , TRUE ) ;
+			$form_data_3 = $form[3];
+			$form_data_3 = $this->load->view('templates/form/plain_form_6', $form_data_3 , TRUE ) ;
 			$this->data[ "contents" ] =  $form_data;
-			$this->data[ "contents" ] .=  $form_data_2.$form_data_1;
+			$this->data[ "contents" ] .=  $form_data_1.$form_data_3;
 			
 			$table = $this->services->get_planning_table_config( $this->current_page );
-			$budget_plan_rpm = $this->budget_model->budget_by_activity_id( $activity_id,  0, 0 )->row();
-			$budget_plan_pln = $this->budget_model->budget_by_activity_id( $activity_id,  0, 1 )->row();
-			$table[ "budget_plan_rpm" ] = $budget_plan_rpm;
-			$table[ "budget_plan_pln" ] = $budget_plan_pln;
-			$table[ "rows" ] =  array();//$this->services->planning_data_test() ;//$this->group_model->groups( $pagination['start_record'], $pagination['limit_per_page'] )->result();
+			$budget_plan = $this->budget_model->budget_by_activity_id( $activity_id,  0 )->row();
+			$physical_plan = $this->physical_model->physical_by_activity_id( $activity_id,  0 )->row();
+			$table[ "budget" ] = $budget_plan;
+			$table[ "physical" ] = $physical_plan;
 			$table = $this->load->view('user/activity/sub_package/budget_planning_input', $table, true);
 			$this->data[ "planning" ] = $table;
-
-			$table = $this->services->get_planning_table_config( $this->current_page );
-			$physical_plan = $this->physical_model->physical_by_activity_id( $activity_id,  0 )->row();
-			$table[ "rows" ] =  array();//$this->services->planning_data_test() ;//$this->group_model->groups( $pagination['start_record'], $pagination['limit_per_page'] )->result();
-			$table[ "physical_plan" ] = $physical_plan;
-			$table = $this->load->view('user/activity/sub_package/physical_planning_input', $table, true);
-			$this->data[ "physical" ] = $table;
 
 			$alert = $this->session->flashdata('alert');
 			$this->data["key"] = $this->input->get('key', FALSE);
@@ -772,15 +854,33 @@ class Activity extends Uadmin_Controller {
         }
 	}
 
-	public function delete(  ) {
-		if( !($_POST) ) redirect( site_url($this->current_page) );
-	  
+	public function delete()
+	{
+
+		if (!($_POST)) redirect(site_url($this->current_page));
+
 		$data_param['id'] 	= $this->input->post('id');
-		if( $this->group_model->delete( $data_param ) ){
-		  $this->session->set_flashdata('alert', $this->alert->set_alert( Alert::SUCCESS, $this->group_model->messages() ) );
-		}else{
-		  $this->session->set_flashdata('alert', $this->alert->set_alert( Alert::DANGER, $this->group_model->errors() ) );
+
+		$activity = $this->activity_model->activity( $data_param['id'] )->row();
+		if ($activity == NULL) redirect(site_url($this->current_page));
+
+		$planing_data_param["activity_id"] = $data_param["id"];
+		$this->physical_model->delete( $planing_data_param );
+		$this->budget_model->delete( $planing_data_param );
+
+		if ($this->activity_model->delete($data_param)) {
+			$image_url = $this->services->get_photo_upload_config("")["upload_path"];
+
+			$images = explode(";", $activity->images);
+			foreach ($images as $i => $image) :
+				echo $image_url . $image . " ";
+				if ($image != "default.jpg")
+					if (!@unlink($image_url . $image)) { };
+			endforeach;
+			$this->session->set_flashdata('alert', $this->alert->set_alert(Alert::SUCCESS, $this->activity_model->messages()));
+		} else {
+			$this->session->set_flashdata('alert', $this->alert->set_alert(Alert::DANGER, $this->activity_model->errors()));
 		}
-		redirect( site_url($this->current_page)  );
+		redirect(site_url($this->current_page));
 	}
 }

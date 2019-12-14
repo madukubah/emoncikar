@@ -80,7 +80,7 @@
               <!--  -->
             </div>
           </div>
-          <!--  -->
+          <!-- Realisasi -->
           <div class="card">
             <div class="card-header">
               <div class="col-12">
@@ -129,8 +129,6 @@
                     <?php echo form_open();  ?>
                     <?php echo (isset($planning)) ? $planning : '';  ?>
                     <br>
-                    <?php echo (isset($physical)) ? $physical : '';  ?>
-                    <br>
                     <button id="submit_do" class="btn btn-bold btn-success btn-sm " style="margin-left: 5px;" type="submit">
                       Simpan
                     </button>
@@ -144,6 +142,70 @@
             </div>
           </div>
           <!--  -->
+          <!-- photo -->
+          <div class="card">
+            <div class="card-header">
+              <div class="col-12">
+                <?php
+                // echo $alert;
+                ?>
+              </div>
+              <div class="row">
+                <div class="col-6">
+                  <h5>
+                    <?php echo strtoupper( "Foto Progress" ) ?>
+                    <p class="text-secondary"><small><?php echo $sub_header ?></small></p>
+                  </h5>
+                </div>
+                <div class="col-6">
+                  <div class="row">
+                    <div class="col-2"></div>
+                    <div class="col-10">
+                      <div class="float-right">
+                        <?php echo (isset($b)) ? $b : '';  ?>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="card-body">
+              <!--  -->
+              <!-- IMAGE -->
+              <div class="row">
+                  <?php
+                    $title = ["0%", "25%", "50%", "75%", "100%" ];
+                    // $images = explode(";", $activity->images);
+                    foreach ($images_arr as $i => $image) :
+                  ?>
+                    <div class="col-3">
+                      <div class="card"  >
+                        <div class="card-body">
+                          <label for=""> <?= $title[$i] ?> </label>
+                          <a href="" data-toggle="modal" data-target="#image<?php echo  $activity->id . $i; ?>">
+                            <img class=" img-fluid" src="<?php echo $image->image_url  ?>" alt="" height="auto" width="500">
+                          </a>
+                          <div class="modal fade" id="image<?php echo  $activity->id . $i; ?>" role="dialog">
+                            <div class="modal-dialog modal-xl " style="overflow: hidden">
+                              <img class=" img-fluid" src="<?php echo $image->image_url  ?>" alt="" height="auto" width="1500">
+                            </div>
+                          </div>
+                          <br>
+                          <br>
+                          <!--  -->
+                          <?= $images_arr[$i]->edit_photo_html ?>
+                          <!--  -->
+                          <br>
+                        </div>
+                      </div>
+                    </div>
+                  <?php
+                  endforeach;
+                  ?>
+              </div>
+              <!--  -->
+            </div>
+          </div>
         </div>
         <!-- /PLANNING -->
       </div>
@@ -152,32 +214,23 @@
 </div>
 <script>
     $(document).ready(function() {
-        var _rpm = false;
-        var _pln = false;
+        var _budget = false;
         var _physical = false;
-        $(".budget_plan_rpm").keyup(function(){
-            _rpm = check( 'budget_plan_rpm', 'ceiling_rpm' );
-            _pln = check( 'budget_plan_pln', 'ceiling_pln' );
+        $(".budget").keyup(function(){
+           _budget = check( 'budget', 'ceiling_budget' );
             validation();
         });
-        $(".budget_plan_pln").keyup(function(){
-            _rpm = check( 'budget_plan_rpm', 'ceiling_rpm' );
-            _pln = check( 'budget_plan_pln', 'ceiling_pln' );
-            validation();
-        });
-        $(".physical_plan").keyup(function(){
-            _rpm = check( 'budget_plan_rpm', 'ceiling_rpm' );
-            _pln = check( 'budget_plan_pln', 'ceiling_pln' );
+        $(".physical").keyup(function(){
             _physical = physical_check();
             validation();
         });
         
         function validation()
         {
-            // if(  _rpm && _pln && _physical ) $("#submit_do").attr("disabled", false);
-            // else 
-            $("#submit_do").attr("disabled", false);
+            // if(  _budget && _physical ) $("#submit_do").attr("disabled", false);
+            // else $("#submit_do").attr("disabled", true);
         }
+
         function check( curr_class, ceiling_budget_id )
         {
             var ceiling_budget = $( "#"+ ceiling_budget_id ).val();
@@ -218,77 +271,45 @@
         }
 
         $("#ceiling_budget").keyup(function(){
-            balance( 'ceiling_pln', 'ceiling_rpm' );
-            _rpm = check( 'budget_plan_rpm', 'ceiling_rpm' );
-            _pln = check( 'budget_plan_pln', 'ceiling_pln' );
+           _budget = check( 'budget', 'ceiling_budget' );
             validation();
         });
-        $("#ceiling_pln").keyup(function(){
-            balance( 'ceiling_pln', 'ceiling_rpm' );
-            _rpm = check( 'budget_plan_rpm', 'ceiling_rpm' );
-            _pln = check( 'budget_plan_pln', 'ceiling_pln' );
-            validation();
-        });
-        $("#ceiling_rpm").keyup(function(){
-            balance( 'ceiling_rpm', 'ceiling_pln' );
-            _rpm = check( 'budget_plan_rpm', 'ceiling_rpm' );
-            _pln = check( 'budget_plan_pln', 'ceiling_pln' );
-            validation();
-        });
-
-        // BALANCE
-        function balance( cuur_element, element )
-        {
-            var ceiling_budget = $("#ceiling_budget").val();
-            var _cuur_element = $("#"+cuur_element).val(  );
-
-            if( ceiling_budget == '' ) ceiling_budget = '0';
-            if( _cuur_element == '' ) _cuur_element = '0';
-            ceiling_budget  = parseInt( ceiling_budget );
-            _cuur_element   = parseInt( _cuur_element );
-
-            $("#"+element).val( ceiling_budget - _cuur_element );
-
-        }
 
         // PHYSICAL
         function physical_check(  )
         {
             var sum_ = physical_sum(  );
             
-            $( "#physical_planning_message"  ).html( "Rencana Fisik | "+ ( 100 - sum_  )  );
+            $( "#physical_message"  ).html( ( 100 - sum_  )  );
             if( sum_ > 100 )
             {
-                $( "#physical_planning_status" ).attr("class", "bg-danger");
+                $( "#physical_status" ).attr("class", "bg-danger");
                 return false;
                 // alert("Lebih");
             }
             else 
             if( sum_ == 100 )
             {
-                $( "#physical_planning_status" ).attr("class", "bg-success");
+                $( "#physical_status" ).attr("class", "bg-success");
                 return true;
             }else{
-                $( "#physical_planning_status" ).attr("class", "bg-warning");
+                $( "#physical_status" ).attr("class", "bg-warning");
                 return false;
             }
         }
         function physical_sum( curr_class )
         {
             var sum = 0;
-            for( var i =0; i< $( ".physical_plan"  ).length; i++  )
+            for( var i =0; i< $( ".physical"  ).length; i++  )
             {
-                var num = $( ".physical_plan" ).eq( i ).val()
+                var num = $( ".physical" ).eq( i ).val()
                 if( num != '' )
                     sum += parseInt( num );
             }
             return sum;
         }
-        if(  $("#ceiling_rpm").val() =='0' )
-          $("#ceiling_rpm").val( $("#ceiling_budget").val() ) ;//= $("#ceiling_budget").val();
-
-        _rpm = check( 'budget_plan_rpm', 'ceiling_rpm' );
-        _pln = check( 'budget_plan_pln', 'ceiling_pln' );
+        
+       _budget = check( 'budget', 'ceiling_budget' );
         _physical = physical_check();
         validation();
     });

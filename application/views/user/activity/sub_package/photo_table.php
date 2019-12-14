@@ -4,10 +4,10 @@
             <tr>
                 <td rowspan="2" align="center" ><strong>No</strong></td>
                 <td rowspan="2" align="center" ><strong>Kode</strong></td>
-                <td rowspan="2" align="center" ><strong>Paket Pekerjaan</strong></td>
-                <td colspan="2" align="center" ><strong>Koordinat</strong></td>
+                <td rowspan="2" align="center" width="30%" ><strong>Paket Pekerjaan</strong></td>
+                <td colspan="2" align="center" width="20%"  ><strong>Koordinat</strong></td>
                 <td colspan="5" align="center" ><strong>Foto</strong></td>
-                <td rowspan="2" align="center" ><strong>Keterangan</strong></td>
+                <!-- <td rowspan="2" align="center" ><strong>Keterangan</strong></td> -->
                 <!-- <td rowspan="2" align="center" >&nbsp;</td> -->
             </tr>
             <tr>
@@ -27,21 +27,24 @@
             ?>
             <tr >
                 <td> <?php echo $no ++ ?> </td>
-                <?php foreach( $header as $key => $value ):?>
-                        <td >
-                            <?php
-                                $attr = "";
-                                if( is_numeric( $row->$key ) && ( $key != 'phone' && $key != 'username' && $key != 'code' && $key != 'year' ) )
-                                    $attr = number_format( $row->$key );
-                                else
-                                    $attr = $row->$key ;
-                                if( $key == 'date' || $key == 'create_date' || $key == 'time' )
-                                    $attr =  date("d/m/Y", $row->$key ) ;
-                                if( $key == 'month' && is_numeric( $row->$key )  )
-                                    $attr = Util::MONTH[ $row->$key ] ;
-                                echo $attr;
-                            ?>
-                        </td>
+                <td> <?php echo $row->code ?> </td>
+                <td> <?php echo $row->title ?> </td>
+                <td> <?php echo $row->longitude ?> </td>
+                <td> <?php echo $row->latitude ?> </td>
+                <?php 
+                    $images = explode(";", $row->images);
+                    foreach( $images as $i => $image ):
+                ?>
+                    <td>
+                        <a href="" data-toggle="modal" data-target="#image<?php echo  $row->id . $i; ?>">
+                            <img class=" img-fluid" src="<?php echo $image_url.$image  ?>" alt="" height="auto" width="500">
+                        </a>
+                        <div class="modal fade" id="image<?php echo  $row->id . $i; ?>" role="dialog">
+                            <div class="modal-dialog modal-xl " style="overflow: hidden">
+                                <img class=" img-fluid" src="<?php echo $image_url.$image  ?>" alt="" height="auto" width="1500">
+                            </div>
+                        </div>
+                    </td>
                 <?php endforeach;?>
             </tr>
             <?php 

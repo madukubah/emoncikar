@@ -2,10 +2,10 @@
     <table class="table table-striped table-bordered table-hover  ">
         <thead style="font-size:12px" >
             <tr>
-                <td colspan="13" align="center" ><strong > <?= $v = ( isset( $table_header ) ) ? $table_header : 'Rencana' ?> </strong></td>
+                <td colspan="13" align="center" ><strong id="budget_message" > <?= $v = ( isset( $header ) ) ? $header : 'Rencana' ?> </strong></td>
             </tr>
             <tr>
-                <td>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp </td>
+                <td>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp </td>
                 <td align="center" ><strong>Jan</strong></td>
                 <td align="center" ><strong>Feb</strong></td>
                 <td align="center" ><strong>Mar</strong></td>
@@ -25,27 +25,27 @@
                 $no =  ( isset( $number ) && ( $number != NULL) )  ? $number : 1 ;
                 foreach( [1] as $ind => $row ):
             ?>
-            <tr id="budget_status"  >
+            <tr id="budget_plan_rpm_status"  >
                 <td>
                     <strong  >
-                        Keuangan | Sisa <div id="budget_message" >  </div>
+                        PAGU | Sisa <div id="budget_plan_rpm_message" >  </div>
                     </strong>
                 </td>    
                 <?php foreach( [ 'jan' ,'feb' ,'mar' ,'apr' ,'mei' ,'jun' ,'jul' ,'ags' ,'sep' ,'okt' ,'nov' ,'des' ] as $ind => $value ):?>
                         <td >
-                            <input type="number" min="0" class="budget" name="budget[]" value="<?= $a = ( isset( $budget ) ? $budget->$value : 0  )?>" >
+                            <input type="number" min="0" class="budget_plan_rpm" name="budget_plan_rpm[]" value="<?= $a = ( isset( $budget_plan_rpm ) ? $budget_plan_rpm->$value : 0  )?>" >
                         </td>
                 <?php endforeach;?>
             </tr>
-            <tr id="physical_status"  >
+            <tr id="budget_plan_pln_status"  >
                 <td>
                     <strong  >
-                        Fisik | Sisa <div id="physical_message" >  </div>
+                        PLN | Sisa <div id="budget_plan_pln_message" >  </div>
                     </strong>
                 </td>  
                 <?php foreach( [ 'jan' ,'feb' ,'mar' ,'apr' ,'mei' ,'jun' ,'jul' ,'ags' ,'sep' ,'okt' ,'nov' ,'des' ] as $ind => $value ):?>
                         <td >
-                            <input type="number" min="0" class="physical" name="physical[]" value="<?= $a = ( isset( $physical ) ? $physical->$value/1 : 0  )?>" >
+                            <input type="number" min="0" class="budget_plan_pln" name="budget_plan_pln[]" value="<?= $a = ( isset( $budget_plan_pln ) ? $budget_plan_pln->$value : 0  )?>" >
                         </td>
                 <?php endforeach;?>
             </tr>

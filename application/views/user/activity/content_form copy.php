@@ -45,6 +45,8 @@
               <?php echo (isset($contents)) ? $contents : '';  ?>
               <?php echo (isset($planning)) ? $planning : '';  ?>
               <br>
+              <?php echo (isset($physical)) ? $physical : '';  ?>
+              <br>
               <button id="submit_do" class="btn btn-bold btn-success btn-sm " style="margin-left: 5px;" type="submit">
                 Simpan
               </button>
@@ -60,23 +62,31 @@
 </div>
 <script>
     $(document).ready(function() {
-        var _budget = false;
+        var _rpm = false;
+        var _pln = false;
         var _physical = false;
-        $(".budget").keyup(function(){
-           _budget = check( 'budget', 'ceiling_budget' );
+        $(".budget_plan_rpm").keyup(function(){
+            _rpm = check( 'budget_plan_rpm', 'ceiling_rpm' );
+            _pln = check( 'budget_plan_pln', 'ceiling_pln' );
             validation();
         });
-        $(".physical").keyup(function(){
+        $(".budget_plan_pln").keyup(function(){
+            _rpm = check( 'budget_plan_rpm', 'ceiling_rpm' );
+            _pln = check( 'budget_plan_pln', 'ceiling_pln' );
+            validation();
+        });
+        $(".physical_plan").keyup(function(){
+            _rpm = check( 'budget_plan_rpm', 'ceiling_rpm' );
+            _pln = check( 'budget_plan_pln', 'ceiling_pln' );
             _physical = physical_check();
             validation();
         });
         
         function validation()
         {
-            if(  _budget && _physical ) $("#submit_do").attr("disabled", false);
+            if(  _rpm && _pln && _physical ) $("#submit_do").attr("disabled", false);
             else $("#submit_do").attr("disabled", true);
         }
-
         function check( curr_class, ceiling_budget_id )
         {
             var ceiling_budget = $( "#"+ ceiling_budget_id ).val();
@@ -117,45 +127,77 @@
         }
 
         $("#ceiling_budget").keyup(function(){
-           _budget = check( 'budget', 'ceiling_budget' );
+            balance( 'ceiling_pln', 'ceiling_rpm' );
+            _rpm = check( 'budget_plan_rpm', 'ceiling_rpm' );
+            _pln = check( 'budget_plan_pln', 'ceiling_pln' );
             validation();
         });
+        $("#ceiling_pln").keyup(function(){
+            balance( 'ceiling_pln', 'ceiling_rpm' );
+            _rpm = check( 'budget_plan_rpm', 'ceiling_rpm' );
+            _pln = check( 'budget_plan_pln', 'ceiling_pln' );
+            validation();
+        });
+        $("#ceiling_rpm").keyup(function(){
+            balance( 'ceiling_rpm', 'ceiling_pln' );
+            _rpm = check( 'budget_plan_rpm', 'ceiling_rpm' );
+            _pln = check( 'budget_plan_pln', 'ceiling_pln' );
+            validation();
+        });
+
+        // BALANCE
+        function balance( cuur_element, element )
+        {
+            var ceiling_budget = $("#ceiling_budget").val();
+            var _cuur_element = $("#"+cuur_element).val(  );
+
+            if( ceiling_budget == '' ) ceiling_budget = '0';
+            if( _cuur_element == '' ) _cuur_element = '0';
+            ceiling_budget  = parseInt( ceiling_budget );
+            _cuur_element   = parseInt( _cuur_element );
+
+            $("#"+element).val( ceiling_budget - _cuur_element );
+
+        }
 
         // PHYSICAL
         function physical_check(  )
         {
             var sum_ = physical_sum(  );
             
-            $( "#physical_message"  ).html( ( 100 - sum_  )  );
+            $( "#physical_planning_message"  ).html( "Rencana Fisik | "+ ( 100 - sum_  )  );
             if( sum_ > 100 )
             {
-                $( "#physical_status" ).attr("class", "bg-danger");
+                $( "#physical_planning_status" ).attr("class", "bg-danger");
                 return false;
                 // alert("Lebih");
             }
             else 
             if( sum_ == 100 )
             {
-                $( "#physical_status" ).attr("class", "bg-success");
+                $( "#physical_planning_status" ).attr("class", "bg-success");
                 return true;
             }else{
-                $( "#physical_status" ).attr("class", "bg-warning");
+                $( "#physical_planning_status" ).attr("class", "bg-warning");
                 return false;
             }
         }
         function physical_sum( curr_class )
         {
             var sum = 0;
-            for( var i =0; i< $( ".physical"  ).length; i++  )
+            for( var i =0; i< $( ".physical_plan"  ).length; i++  )
             {
-                var num = $( ".physical" ).eq( i ).val()
+                var num = $( ".physical_plan" ).eq( i ).val()
                 if( num != '' )
                     sum += parseInt( num );
             }
             return sum;
         }
-        
-       _budget = check( 'budget', 'ceiling_budget' );
+        if(  $("#ceiling_rpm").val() =='0' )
+          $("#ceiling_rpm").val( $("#ceiling_budget").val() ) ;//= $("#ceiling_budget").val();
+
+        _rpm = check( 'budget_plan_rpm', 'ceiling_rpm' );
+        _pln = check( 'budget_plan_pln', 'ceiling_pln' );
         _physical = physical_check();
         validation();
     });

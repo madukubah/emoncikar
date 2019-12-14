@@ -123,13 +123,24 @@ class Activity_model extends MY_Model
    * @return static
    * @author madukubah
    */
-  public function _fetch_data( $start = 0 , $limit = NULL )
+  public function _fetch_data( $start = 0 , $limit = NULL, $pptk_id = NULL )
   {
+      if ( isset( $pptk_id ) )
+        $this->where( 'pptk_id', $pptk_id);
       if (isset( $limit ))
       {
         $this->limit( $limit );
       }
       $this->offset( $start );
+      $this->select( $this->table.'.*' );
+      $this->select( 'nomenclature.id as nomenclature_id' );
+      $this->select( 'nomenclature.code as code' );
+
+      $this->join(
+        "nomenclature",
+        "nomenclature.id = " . $this->table . ".nomenclature_id",
+        "inner"
+      );
       $this->order_by($this->table.'.id', 'asc');
       return $this->fetch_data();
   }
@@ -161,8 +172,6 @@ class Activity_model extends MY_Model
         "nomenclature.code",
         "nomenclature.name",
         "activity.*",
-        "'F' as AuFnF",
-        "'F' as AUpLkS",
         "SUM( quantity ) as quantity",
         "SUM( activity.ceiling_rpm + activity.ceiling_pln ) as total",
         "SUM( ceiling_rpm ) as ceiling_rpm",

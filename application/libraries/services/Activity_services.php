@@ -11,6 +11,9 @@ class Activity_services
 	protected $ceiling_budget;
 	protected $location;
   protected $pptk_id;
+  protected $AuFnF;
+  protected $latitude;
+  protected $longitude;
   
   public $months = array( 'jan' ,'feb' ,'mar' ,'apr' ,'mei' ,'jun' ,'jul' ,'ags' ,'sep' ,'okt' ,'nov' ,'des');
 
@@ -26,6 +29,9 @@ class Activity_services
      $this->ceiling_pln = 0;
      $this->location = "KOTA KENDARI";
      $this->pptk_id = 1;
+     $this->AuFnF = "F";
+     $this->latitude = "0";
+     $this->longitude = "0";
   }
 
   public function __get($var)
@@ -33,6 +39,21 @@ class Activity_services
     return get_instance()->$var;
   }
   
+  public function get_photo_upload_config($name = "_")
+  {
+    $filename = $name . "_" . time();
+    $upload_path = 'uploads/progress/';
+
+    $config['upload_path'] = './' . $upload_path;
+    $config['image_path'] = base_url() . $upload_path;
+    $config['allowed_types'] = "gif|jpg|png|jpeg";
+    $config['overwrite'] = "true";
+    $config['max_size'] = "2048";
+    $config['file_name'] = '' . $filename;
+
+    return $config;
+  }
+
   public function get_table_config( $_page, $start_number = 1 )
   {
       $table["header"] = array(
@@ -54,12 +75,6 @@ class Activity_services
 
   public function get_month_table_config( $_page, $start_number = 1 )
   {
-      // $table["header"] = array(
-      //   'month' => 'Bulan',
-      //   'rpm' => 'RPM ( Ribu )',
-      //   'pln' => 'PLN ( Ribu )',
-      //   'physical' => 'Fisik',
-      // );
       $table["header"] = array(
 				'title' => '	',
 				
@@ -91,20 +106,20 @@ class Activity_services
         'unit' => 'Unit Target',
         'AuFnF' => 'AUfNf',
         'AUpLkS' => 'AUpLkS',
-        'ceiling_rpm' => 'akun RPM Pagu',
-        'ceiling_pln' => 'akun PLN Pagu',
+        // 'ceiling_rpm' => 'akun RPM Pagu',
+        // 'ceiling_pln' => 'akun PLN Pagu',
         'total' => 'akun total Pagu',
         // 'ceiling_package' => 'Paket Pagu',
         // 'ceiling_procurement_plan' => 'pencana pengadaan Pagu',
 
-        'real_rpm' => 'akun RPM Realisasi',
-        'real_pln' => 'akun PLN Realisasi',
+        // 'real_rpm' => 'akun RPM Realisasi',
+        // 'real_pln' => 'akun PLN Realisasi',
         'real_total' => 'akun total Realisasi',
 
         'financial_progress' => 'Progress keuangan',
         'physical_progress' => 'Progress Fisik',
 
-        'ceiling_block' => 'Pagu Blokir',
+        // 'ceiling_block' => 'Pagu Blokir',
         'description' => 'Keterangan',
       );
       $table["number"] = $start_number;
@@ -164,7 +179,6 @@ class Activity_services
 
   public function get_physical_prefix_sum( $data )
   {
-      // $months = array('jan' ,'feb' ,'mar' ,'apr' ,'mei' ,'jun' ,'jul' ,'ags' ,'sep' ,'okt' ,'nov' ,'des');
       $months = $this->months;
       $sum = 0;
       for( $i=1; $i < count( $months ); $i++ )
@@ -178,7 +192,6 @@ class Activity_services
   }
   public function get_budget_physical_row( $rpm, $pln, $physical )
   {
-      // $months = array('jan' ,'feb' ,'mar' ,'apr' ,'mei' ,'jun' ,'jul' ,'ags' ,'sep' ,'okt' ,'nov' ,'des');
       $months = $this->months;
       $sum = 0;
       $rows = array();
@@ -377,6 +390,8 @@ class Activity_services
           $this->ceiling_pln      = $activity->ceiling_pln;
           $this->location         = $activity->location;
           $this->pptk_id          = $activity->pptk_id;
+          $this->latitude         = $activity->latitude;
+          $this->longitude        = $activity->longitude;
       }
       // echo var_dump( $activity ); die;
 
@@ -394,6 +409,11 @@ class Activity_services
       {
           $nomenclatures_select[ $nomenclature->id ] = "[{$nomenclature->code}] {$nomenclature->name}" ; ;
       }
+      $AuFnF_select = [
+        "AU" => "[AU] Administrasi Umum",
+        "F" => "[F] Fisik",
+        "NF" => "[NF] Non Fisik",
+      ];
       $_data[0]["form_data"] = array(
         "id" => array(
           'type' => 'hidden',
@@ -404,6 +424,12 @@ class Activity_services
           'type' => 'textarea',
           'label' => "Uraian",
           'value' => $this->form_validation->set_value('title', $this->title),
+        ),
+        "AuFnF" => array(
+          'type' => 'select',
+          'label' => "Tipe Kegiatan",
+          'options' => $AuFnF_select,
+          'selected' => $this->form_validation->set_value('AuFnF', $this->AuFnF ),
         ),
         "nomenclature_id" => array(
           'type' => 'select',
@@ -467,7 +493,19 @@ class Activity_services
           'value' => 0 ,
           'value' => $this->form_validation->set_value('ceiling_pln', $this->ceiling_pln),
         ),
-    );
+      );
+      $_data[3]["form_data"] = array(
+          "latitude" => array(
+            'type' => 'text',
+            'label' => "Latitude",
+            'value' => $this->form_validation->set_value('latitude', $this->latitude),
+          ),
+          "longitude" => array(
+            'type' => 'text',
+            'label' => "Longitude",
+            'value' => $this->form_validation->set_value('longitude', $this->longitude),
+          ),
+      );
       return $_data;
   }
 }
