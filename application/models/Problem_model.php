@@ -124,7 +124,7 @@ class Problem_model extends MY_Model
    * @return static
    * @author madukubah
    */
-  public function problems( $start = 0 , $limit = NULL, $nomenclature_id = NULL, $year = NULL, $pptk_id = NULL )
+  public function problems( $start = 0 , $limit = NULL, $nomenclature_id = NULL, $year = NULL, $pptk_id = NULL,  $activity_id = NULL )
   {
       if (isset( $limit ))
       {
@@ -152,6 +152,8 @@ class Problem_model extends MY_Model
           $this->where( 'nomenclature_id', $nomenclature_id);
       if ( isset( $pptk_id ) )
           $this->where( 'pptk_id', $pptk_id);
+      if ( isset( $activity_id ) )
+          $this->db->where( 'activity.id', $activity_id);
 
       $this->order_by( $this->table.'.report_date', 'asc');
       return $this->fetch_data();

@@ -773,7 +773,7 @@ class Activity extends Uadmin_Controller {
 		$this->data["problem_header"] =  $modal_add_problem;
 
 		$problem_table = $this->services->get_table_config( 'uadmin/problem/' );
-		$problem_table[ "rows" ] = $this->problem_model->problems(  )->result();
+		$problem_table[ "rows" ] = $this->problem_model->problems( $start = 0 , $limit = NULL, $nomenclature_id = NULL, $year = NULL, $pptk_id = NULL,  $activity_id  )->result();
 		// echo var_dump( $problem_table[ "rows" ] ); die;
 		$problem_table = $this->load->view('templates/tables/plain_table_12', $problem_table, true);
 		$this->data[ "problem_table" ] = $problem_table;
