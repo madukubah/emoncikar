@@ -194,7 +194,7 @@ class Physical_model extends MY_Model
    * @return static
    * @author madukubah
    */
-  public function sum( $start = 0 , $limit = NULL, $nomenclature_id = NULL, $year = NULL, $pptk_id = NULL, $status = 0 )
+  public function sum( $start = 0 , $limit = NULL, $nomenclature_id = NULL, $year = NULL, $pptk_id = NULL, $status = 0, $activity_id = NULL )
   {
       $year || $year = date('Y');
         $this->db->select([
@@ -255,6 +255,8 @@ class Physical_model extends MY_Model
             $this->db->where( 'nomenclature_id', $nomenclature_id);
         if ( isset( $pptk_id ) )
             $this->db->where( 'pptk_id', $pptk_id);
+        if ( isset( $activity_id ) )
+            $this->db->where( 'activity.id', $activity_id);
         
         // $this->db->group_by( 'activity.id');
 

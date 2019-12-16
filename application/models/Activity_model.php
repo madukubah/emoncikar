@@ -123,10 +123,8 @@ class Activity_model extends MY_Model
    * @return static
    * @author madukubah
    */
-  public function _fetch_data( $start = 0 , $limit = NULL, $pptk_id = NULL )
+  public function _fetch_data( $start = 0 , $limit = NULL, $nomenclature_id = NULL, $year = NULL, $pptk_id = NULL )
   {
-      if ( isset( $pptk_id ) )
-        $this->where( 'pptk_id', $pptk_id);
       if (isset( $limit ))
       {
         $this->limit( $limit );
@@ -141,6 +139,14 @@ class Activity_model extends MY_Model
         "nomenclature.id = " . $this->table . ".nomenclature_id",
         "inner"
       );
+
+      if ( isset( $year ) )
+          $this->where( 'activity.year', $year);
+      if ( isset( $nomenclature_id ) )
+          $this->where( 'nomenclature_id', $nomenclature_id);
+      if ( isset( $pptk_id ) )
+          $this->where( 'pptk_id', $pptk_id);
+          
       $this->order_by($this->table.'.id', 'asc');
       return $this->fetch_data();
   }

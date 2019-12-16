@@ -41,6 +41,8 @@
 <script src="<?= base_url('assets/') ?>plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
 <!-- AdminLTE App -->
 <script src="<?= base_url('assets/') ?>dist/js/adminlte.js"></script>
+<!-- Select2 -->
+<script src="<?= base_url('assets/') ?>plugins/select2/js/select2.full.min.js"></script>
 <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
 <!-- <script src="<?= base_url('assets/') ?>dist/js/pages/dashboard.js"></script> -->
 <!-- AdminLTE for demo purposes -->
@@ -54,6 +56,13 @@
     //Date range picker
     $('.datepicker').datepicker();
     // console.log( $('.datepicker').val() );
+
+    $('.select2').select2();
+
+     //Initialize Select2 Elements
+     $('.select2').select2({
+      theme: 'bootstrap4'
+    });
     
   })
 </script>

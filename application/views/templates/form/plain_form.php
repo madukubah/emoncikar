@@ -64,7 +64,7 @@
                     echo form_upload( $form );
                     break;
                 case 'select_search':
-                    $form['class'] = 'form-control show-tick';
+                    $form['class'] = 'form-control show-tick select2 ';
                     $form['data-live-search'] = 'true';
                 case 'select':
                     $form['options'] = ( isset( $attr['options'] )  ) ? $attr['options'] : '';

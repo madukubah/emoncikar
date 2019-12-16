@@ -258,9 +258,69 @@ class Activity_services
   public function get_problem_table_config( $_page, $start_number = 1 )
   {
       $table["header"] = array(
+				// 'name' => '	Paket Pekerjaan',
+			
+				'_date' => 'Tanggal',
+        'problem_description' => 'Permasalahan',
+        
+				'problem_date' => 'Tanggal Masalah',
+				'solution' => 'Upaya yang diperlukan',
+				'authorized_official' => 'Instansi/Pejabat yang Berwenang',
+				'settlement_time' => 'Waktu Penyelesaian',
+        'required_support' => 'Dukungan Atasan yang diperlukan',
+      );
+      $table["number"] = $start_number;
+      $table[ "action" ] = array(
+        array(
+          "name" => 'Edit',
+          "type" => "modal_form",
+          "modal_id" => "edit_",
+          "url" => site_url( $_page."edit/"),
+          "button_color" => "primary",
+          "param" => "id",
+          "form_data" => array(
+              "id" => array(
+                  'type' => 'hidden',
+                  'label' => "id",
+              ),
+              "code" => array(
+                  'type' => 'text',
+                  'label' => "Kode",
+              ),
+              "name" => array(
+                  'type' => 'text',
+                  'label' => "Nama",
+              ),
+          ),
+          "title" => "Group",
+          "data_name" => "name",
+        ),
+        array(
+          "name" => 'X',
+          "type" => "modal_delete",
+          "modal_id" => "delete_",
+          "url" => site_url( $_page."delete/"),
+          "button_color" => "danger",
+          "param" => "id",
+          "form_data" => array(
+            "id" => array(
+              'type' => 'hidden',
+              'label' => "id",
+            ),
+          ),
+          "title" => "Group",
+          "data_name" => "name",
+        ),
+    );
+    return $table;
+  }
+
+  public function get_problem_table_config_view( $_page, $start_number = 1 )
+  {
+      $table["header"] = array(
 				'name' => '	Paket Pekerjaan',
 			
-				'date' => 'Tanggal',
+				'_date' => 'Tanggal',
         'problem_description' => 'Permasalahan',
         
 				'problem_date' => 'Tanggal Masalah',
@@ -323,7 +383,7 @@ class Activity_services
         'id' => '1',
 				'name' => '	Peningkatan Kualitas Permukiman Kumuh Kab. Kolaka Kawasan Kolakasih-Sea (NSUP)	',
 			
-				'date' => '14-06-2019',
+				'_date' => '14-06-2019',
         'problem_description' => 'Masih Proses Persiapan Lelang di Balai PBJ Wilayah Sulawesi Tenggara	',
         
 				'problem_date' => '14-06-2019',
@@ -340,7 +400,7 @@ class Activity_services
         'id' => '1',
 				'name' => '	Peningkatan Kualitas Permukiman Kumuh Kab. Kolaka Kawasan Kolakasih-Sea (NSUP)	',
 			
-				'date' => '14-06-2019',
+				'_date' => '14-06-2019',
         'problem_description' => 'Masih Proses Persiapan Lelang di Balai PBJ Wilayah Sulawesi Tenggara	',
         
 				'problem_date' => '14-06-2019',

@@ -17,6 +17,7 @@ class Activity extends Uadmin_Controller {
 			'budget_model',
 			'physical_model',
 			'nomenclature_model',
+			'problem_model'
 		));
 		$this->data["menu_list_id"] = "activity_index";
 
@@ -126,6 +127,7 @@ class Activity extends Uadmin_Controller {
 		$code = $this->input->get("code", TRUE );
 		$pptk_id = $this->input->get("pptk_id", TRUE );
 		$year = $this->input->get("year", TRUE );
+		
 
 		$code || $code = "recap";
 		$pptk_id || $pptk_id = -1;
@@ -200,12 +202,14 @@ class Activity extends Uadmin_Controller {
 				$this->data[ "contents" ] = "";
 			break;
 			case "chart" :
+				$activity_id = $this->input->get("activity_id", TRUE );
+
 				$months = array('jan' ,'feb' ,'mar' ,'apr' ,'mei' ,'jun' ,'jul' ,'ags' ,'sep' ,'okt' ,'nov' ,'des');
 				###############################################
 				# BUDGET
 				###############################################
-				$sum_budget = $this->budget_model->sum( 0, NULL, $nomenclature_id, $year , $pptk_id )->row();
-				$budget_plan_table = $this->budget_model->sum( 0, NULL, $nomenclature_id, $year , $pptk_id )->row();
+				$sum_budget = $this->budget_model->sum( 0, NULL, $nomenclature_id, $year , $pptk_id, $status = 0, $rpm_pln = NULL, $activity_id )->row();
+				$budget_plan_table = $this->budget_model->sum( 0, NULL, $nomenclature_id, $year , $pptk_id, $status = 0, $rpm_pln = NULL, $activity_id  )->row();
 				#NORMALIZATION
 				$sum_budget = $this->services->get_physical_prefix_sum( $sum_budget );
 				$budget_plan_arr = array();
@@ -216,8 +220,8 @@ class Activity extends Uadmin_Controller {
 					$plan_table []=  $budget_plan_table->$month ;
 				}
 				#######
-				$realization_sum_budget = $this->budget_model->sum( 0, NULL, $nomenclature_id, $year , $pptk_id, $status = 1 )->row();
-				$realization_sum_budget_table = $this->budget_model->sum( 0, NULL, $nomenclature_id, $year , $pptk_id, $status = 1 )->row();
+				$realization_sum_budget = $this->budget_model->sum( 0, NULL, $nomenclature_id, $year , $pptk_id, $status = 1, $rpm_pln = NULL, $activity_id  )->row();
+				$realization_sum_budget_table = $this->budget_model->sum( 0, NULL, $nomenclature_id, $year , $pptk_id, $status = 1, $rpm_pln = NULL, $activity_id  )->row();
 
 				#NORMALIZATION
 				$realization_sum_budget = $this->services->get_physical_prefix_sum( $realization_sum_budget );
@@ -260,8 +264,8 @@ class Activity extends Uadmin_Controller {
 				###############################################
 				# PHYSICAL
 				###############################################
-				$sum_physical = $this->physical_model->sum( 0, NULL, $nomenclature_id, $year , $pptk_id )->row();
-				$sum_physical_table = $this->physical_model->sum( 0, NULL, $nomenclature_id, $year , $pptk_id )->row();
+				$sum_physical = $this->physical_model->sum( 0, NULL, $nomenclature_id, $year , $pptk_id, $status = 0, $activity_id )->row();
+				$sum_physical_table = $this->physical_model->sum( 0, NULL, $nomenclature_id, $year , $pptk_id, $status = 0, $activity_id  )->row();
 				$sum_physical = $this->services->get_physical_prefix_sum( $sum_physical );
 				$physical_plan_arr = array();
 				$physical_plan_table_arr = array();
@@ -271,8 +275,8 @@ class Activity extends Uadmin_Controller {
 					$physical_plan_table_arr []= $sum_physical_table->$month ;
 				}
 				#realization
-				$realization_sum_physical = $this->physical_model->sum( 0, NULL, $nomenclature_id, $year , $pptk_id,  $status = 1 )->row();
-				$realization_sum_physical_table = $this->physical_model->sum( 0, NULL, $nomenclature_id, $year , $pptk_id,  $status = 1 )->row();
+				$realization_sum_physical = $this->physical_model->sum( 0, NULL, $nomenclature_id, $year , $pptk_id,  $status = 1, $activity_id )->row();
+				$realization_sum_physical_table = $this->physical_model->sum( 0, NULL, $nomenclature_id, $year , $pptk_id,  $status = 1, $activity_id )->row();
 				$realization_sum_physical = $this->services->get_physical_prefix_sum( $realization_sum_physical );
 				$physical_realization_arr = array();
 				$physical_realization_table_arr = array();
@@ -301,7 +305,36 @@ class Activity extends Uadmin_Controller {
 					),
 				);
 				$chart2 = $this->load->view('user/activity/sub_package/line', $chart2, true);
-				$this->data[ "contents" ] = $form_filter.$chart1."<br>".$chart2;
+
+				$activities = $this->activity_model->_fetch_data( 0, NULL, $nomenclature_id, $year , $pptk_id )->result();
+				$activity_select = array();
+
+				foreach( $activities as $activity )
+				{
+					$activity_select[ $activity->id ] = "{$activity->title}" ;
+				}
+				$activity_form["form_data"] = array(
+					"code" => array(
+						'type' => 'hidden',
+						'label' => "Email",
+						'value' => $code
+					),
+					"activity_id" => array(
+					  'type' => 'select_search',
+					  'label' => "ID",
+					  'options' => $activity_select,
+					  'selected' => $activity_id,
+					),
+					
+				);
+				$activity_form["form"] = $this->load->view('templates/form/plain_form_horizontal', $activity_form, TRUE);
+				$activity_form = $this->load->view('user/activity/sub_package/filter_horizontal', $activity_form, TRUE);
+
+				// $activity_form = $this->load->view('templates/form/plain_form', $activity_form , TRUE ) ;
+				// echo var_dump( $activity_form ); die;
+
+				// $this->data[ "contents" ] = $form_filter.$chart1."<br>".$chart2;
+				$this->data[ "contents" ] = $form_filter.$activity_form.$chart1."<br>".$chart2;
 			break;
 			case "budget_planning" :
 				$table = $this->services->get_planning_table_config( $this->current_page );
@@ -338,15 +371,18 @@ class Activity extends Uadmin_Controller {
 			break;
 			case "galleries" :
 				$table = $this->services->get_photo_table_config( $this->current_page );
-				$table[ "rows" ] = $this->activity_model->_fetch_data( $start = 0 , $limit = NULL, $pptk_id )->result();
+				$table[ "rows" ] = $this->activity_model->_fetch_data( 0, NULL, $nomenclature_id, $year , $pptk_id )->result();
 				$table["image_url"] =  base_url("uploads/progress/");
 				$table = $this->load->view('user/activity/sub_package/photo_table', $table, true);
 				$this->data[ "contents" ] = $form_filter.$table;
 			break;
 			case "problem" :
-				$table = $this->services->get_problem_table_config( $this->current_page );
-				$table[ "rows" ] = $this->services->problem_data_test();//$this->group_model->groups( $pagination['start_record'], $pagination['limit_per_page'] )->result();
-				$table = $this->load->view('user/activity/sub_package/problem_table', $table, true);
+				$this->load->library('services/Problem_services');
+				$this->services = new Problem_services;
+
+				$table = $this->services->get_problem_table_config_view( $this->current_page );
+				$table[ "rows" ] = $this->problem_model->problems( 0, NULL, $nomenclature_id, $year , $pptk_id )->result();
+				$table = $this->load->view('templates/tables/plain_table_12', $table, true);
 				$this->data[ "contents" ] = $form_filter.$table;
 			break;
 			default:
@@ -709,6 +745,40 @@ class Activity extends Uadmin_Controller {
 		$this->data["header_button"] .=  $modal_add;
 		####################################################
 		# DELETE
+		####################################################
+		####################################################
+		# PROBLEM
+		####################################################
+		$this->load->library('services/Problem_services');
+		$this->services = new Problem_services;
+
+		$modal_add_problem = array(
+			"name" => "Tambah",
+			"modal_id" => "add_problem_",
+			"button_color" => "primary",
+			"url" => site_url( "uadmin/problem/add/" ),
+			"param" => "id",
+			"form_data" => $this->services->get_form_data(  )["form_data"] ,
+			"title" => "Kegiatan",
+        	"data_name" => "title",
+			'data' => NULL
+		);
+
+		$modal_add_problem["form_data"][ "activity_id" ]['value'] = $activity_id;
+		$modal_add_problem["form_data"][ "report_date" ]['value'] = date( "m/d/Y" ) ;
+		$modal_add_problem["form_data"][ "problem_date" ]['value'] = date( "m/d/Y" ) ;
+		$modal_add_problem["form_data"][ "settlement_date" ]['value'] = date( "m/d/Y" ) ;
+
+		$modal_add_problem = $this->load->view('templates/actions/modal_form', $modal_add_problem, true);
+		$this->data["problem_header"] =  $modal_add_problem;
+
+		$problem_table = $this->services->get_table_config( 'uadmin/problem/' );
+		$problem_table[ "rows" ] = $this->problem_model->problems(  )->result();
+		// echo var_dump( $problem_table[ "rows" ] ); die;
+		$problem_table = $this->load->view('templates/tables/plain_table_12', $problem_table, true);
+		$this->data[ "problem_table" ] = $problem_table;
+		####################################################
+		# PROBLEM
 		####################################################
 		$alert = $this->session->flashdata('alert');
 		$this->data["key"] = $this->input->get('key', FALSE);

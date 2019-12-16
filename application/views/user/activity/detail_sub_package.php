@@ -176,7 +176,7 @@
                   <?php
                     $title = ["0%", "25%", "50%", "75%", "100%" ];
                     // $images = explode(";", $activity->images);
-                    foreach ($images_arr as $i => $image) :
+                    foreach ( $images_arr as $i => $image) :
                   ?>
                     <div class="col-3">
                       <div class="card"  >
@@ -206,6 +206,40 @@
               <!--  -->
             </div>
           </div>
+          <!-- problem -->
+          <div class="card">
+            <div class="card-header">
+              <div class="col-12">
+                <?php
+                // echo $alert;
+                ?>
+              </div>
+              <div class="row">
+                <div class="col-6">
+                  <h5>
+                    <?php echo strtoupper( "permasalahan" ) ?>
+                    <p class="text-secondary"><small><?php echo $sub_header ?></small></p>
+                  </h5>
+                </div>
+                <div class="col-6">
+                  <div class="row">
+                    <div class="col-2"></div>
+                    <div class="col-10">
+                      <div class="float-right">
+                        <?php echo (isset($problem_header)) ? $problem_header : '';  ?>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="card-body">
+              <!--  -->
+              <?php echo (isset($problem_table)) ? $problem_table : '';  ?>
+              <!--  -->
+            </div>
+          </div>
+          <!--  -->
         </div>
         <!-- /PLANNING -->
       </div>
