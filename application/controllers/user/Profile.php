@@ -80,6 +80,7 @@ class Profile extends User_Controller {
 
 			$user = $this->ion_auth->user()->row();//curr user
 			
+			$identity_mode = NULL;
 			if( !$this->ion_auth->in_group( ["admin", "uadmin"] , $user->id ) )
 			{
 				$identity_mode = NULL;
