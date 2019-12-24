@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 16, 2019 at 06:07 PM
+-- Generation Time: Dec 24, 2019 at 04:47 AM
 -- Server version: 10.1.34-MariaDB
 -- PHP Version: 5.6.37
 
@@ -120,13 +120,6 @@ CREATE TABLE `login_attempts` (
   `login` varchar(100) NOT NULL,
   `time` int(11) UNSIGNED DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Dumping data for table `login_attempts`
---
-
-INSERT INTO `login_attempts` (`id`, `ip_address`, `login`, `time`) VALUES
-(2, '::1', 'dinas@gmail.com', 1576514725);
 
 -- --------------------------------------------------------
 
@@ -260,7 +253,8 @@ CREATE TABLE `problem` (
 
 INSERT INTO `problem` (`id`, `activity_id`, `report_date`, `problem_description`, `problem_date`, `solution`, `authorities`, `settlement_date`, `required_support`) VALUES
 (2, 31, '2019-12-16', 'permasalahan', '2019-12-16', 'solusi', 'pejabat', '2019-12-19', 'dukungan\r\n'),
-(3, 32, '2019-12-16', 'yuhu', '2019-12-16', 'yihi', 'yaha', '2019-12-16', 'ehe\r\n');
+(3, 32, '2019-12-16', 'yuhu', '2019-12-16', 'yihi', 'yaha', '2019-12-16', 'ehe\r\n'),
+(4, 30, '2019-12-19', 'permasalahan', '2019-12-19', 'upaya yang di perlukan', 'pejabat yang berwenang', '2019-12-19', 'dukungan atasan yang di perlukan');
 
 -- --------------------------------------------------------
 
@@ -297,7 +291,7 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`id`, `ip_address`, `username`, `password`, `email`, `activation_selector`, `activation_code`, `forgotten_password_selector`, `forgotten_password_code`, `forgotten_password_time`, `remember_selector`, `remember_code`, `created_on`, `last_login`, `active`, `first_name`, `last_name`, `phone`, `image`, `address`) VALUES
 (1, '127.0.0.1', 'admin@fixl.com', '$2y$12$XpBgMvQ5JzfvN3PTgf/tA.XwxbCOs3mO0a10oP9/11qi1NUpv46.u', 'admin@fixl.com', NULL, '', NULL, NULL, NULL, NULL, NULL, 1268889823, 1576251648, 1, 'Admin', 'istrator', '081342989185', 'USER_1_1571554027.jpeg', 'admin'),
-(13, '::1', 'uadmin@gmail.com', '$2y$10$78SZyvKRKMU7nPCew9w4nOpEUmJ1SeTV4L4ZG2NXXSfbEaswqoepq', 'uadmin@gmail.com', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1568678256, 1576514767, 1, 'admin', '.', '00', 'USER_13_1568678463.jpg', 'jln mutiara no 8');
+(13, '::1', 'admin@admin.com', '$2y$10$JXswvmf3LROR1/eRyeTZBe02ezMjL4vCkO3VkI9Z3GiXpN772BF22', 'admin@admin.com', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1568678256, 1577159207, 1, 'admin', '.', '00', 'USER_13_1576759794.png', 'jln mutiara no 8');
 
 -- --------------------------------------------------------
 
@@ -427,7 +421,7 @@ ALTER TABLE `groups`
 -- AUTO_INCREMENT for table `login_attempts`
 --
 ALTER TABLE `login_attempts`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `menus`
@@ -457,7 +451,7 @@ ALTER TABLE `pptk`
 -- AUTO_INCREMENT for table `problem`
 --
 ALTER TABLE `problem`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `users`
