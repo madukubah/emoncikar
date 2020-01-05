@@ -19,19 +19,19 @@ class Activity_services
 
   function __construct(){
      $this->id = 0;
-     $this->title = "Administrasi Umum Satker PLP";
-     $this->nomenclature_id = 3;
-     $this->quantity = 4;
-     $this->unit = "KAB/KOTA";
+     $this->title = "";//"Administrasi Umum Satker PLP";
+     $this->nomenclature_id = "";//3;
+     $this->quantity = "";//4;
+     $this->unit = "";//"KAB/KOTA";
      $this->year = date('Y');
-     $this->ceiling_budget = 200000;
-     $this->ceiling_rpm = 0;
-     $this->ceiling_pln = 0;
-     $this->location = "KOTA KENDARI";
-     $this->pptk_id = 1;
-     $this->AuFnF = "F";
-     $this->latitude = "0";
-     $this->longitude = "0";
+     $this->ceiling_budget = "";//200000;
+     $this->ceiling_rpm = "";//0;
+     $this->ceiling_pln = "";//0;
+     $this->location = "";//"KOTA KENDARI";
+     $this->pptk_id = "";//1;
+     $this->AuFnF = "";//"F";
+     $this->latitude = "";//"0";
+     $this->longitude = "";//"0";
   }
 
   public function __get($var)
@@ -105,7 +105,7 @@ class Activity_services
         'quantity' => 'Kuantitas Target',
         'unit' => 'Unit Target',
         'AuFnF' => 'AUfNf',
-        'AUpLkS' => 'AUpLkS',
+        // 'AUpLkS' => 'AUpLkS',
         // 'ceiling_rpm' => 'akun RPM Pagu',
         // 'ceiling_pln' => 'akun PLN Pagu',
         'total' => 'akun total Pagu',
@@ -133,7 +133,7 @@ class Activity_services
 				'title' => '	Nama Satuan Kerja',
 			
 				'AuFnF' => 'AUfNf',
-				'AUpLkS' => 'AUpLkS',
+				// 'AUpLkS' => 'AUpLkS',
 				'total' => 'Pagu Akun',
 				// 'ceiling_planning' => 'Pagu Rencana',
 				
@@ -452,6 +452,7 @@ class Activity_services
           $this->pptk_id          = $activity->pptk_id;
           $this->latitude         = $activity->latitude;
           $this->longitude        = $activity->longitude;
+          $this->AuFnF            = $activity->AuFnF;
       }
       // echo var_dump( $activity ); die;
 

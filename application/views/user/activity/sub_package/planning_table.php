@@ -8,9 +8,9 @@
                 <td rowspan="2" align="center" ><strong>AU/<br>
                 F/<br>
                 NF</strong></td>
-                <td rowspan="2" align="center" ><strong>AU/<br>
+                <!-- <td rowspan="2" align="center" ><strong>AU/<br>
                 K/<br>
-                S</strong></td>
+                S</strong></td> -->
                 <td rowspan="2" align="center" ><strong>Pagu<br>
                     <!-- Akun<br> -->
                     (Rp Ribu) </strong></td>

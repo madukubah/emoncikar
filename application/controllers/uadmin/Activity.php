@@ -135,7 +135,17 @@ class Activity extends Uadmin_Controller {
 		if( !isset( $nomenclature_id ) )  redirect(site_url(  $this->current_page ));  
 
 		$nomenclature = $this->nomenclature_model->nomenclature( $nomenclature_id )->row();
+		#################################################################3
+		# filter with activity id
+		#################################################################3
+		$activity_id = $this->input->get("activity_id", TRUE );
+		if( $activity_id != NULL )
+		{
+			$activity = $this->activity_model->activity( $activity_id )->row();
+			if ($activity == NULL) redirect(site_url($this->current_page));
 
+			$year = $activity->year;
+		}
 		#################################################################3
 		$pptks = $this->pptk_model->pptks(  )->result();
 		$pptk_select = array();
@@ -202,8 +212,7 @@ class Activity extends Uadmin_Controller {
 				$this->data[ "contents" ] = "";
 			break;
 			case "chart" :
-				$activity_id = $this->input->get("activity_id", TRUE );
-
+				
 				$months = array('jan' ,'feb' ,'mar' ,'apr' ,'mei' ,'jun' ,'jul' ,'ags' ,'sep' ,'okt' ,'nov' ,'des');
 				###############################################
 				# BUDGET
@@ -307,8 +316,8 @@ class Activity extends Uadmin_Controller {
 				$chart2 = $this->load->view('user/activity/sub_package/line', $chart2, true);
 
 				$activities = $this->activity_model->_fetch_data( 0, NULL, $nomenclature_id, $year , $pptk_id )->result();
-				$activity_select = array();
-
+				$activity_select [ -1 ] = " ";
+				$activity_id || $activity_id = -1;
 				foreach( $activities as $activity )
 				{
 					$activity_select[ $activity->id ] = "{$activity->title}" ;
@@ -616,10 +625,11 @@ class Activity extends Uadmin_Controller {
 		$this->data[ "physical" ] = "";
 
 		$table = $this->services->get_month_table_config( $this->current_page );
-		$budget_plan = $this->budget_model->budget_by_activity_id( $activity_id,  0 )->row();
+		$budget_plan = $this->budget_model->budget_by_activity_id( $activity_id,  0, $activity->year )->row();
+		// echo var_dump( $this->db );die;
 		$budget_plan->title = 'KEUANGAN ( Ribu )';
 		
-		$physical_plan = $this->physical_model->physical_by_activity_id( $activity_id,  0 )->row();
+		$physical_plan = $this->physical_model->physical_by_activity_id( $activity_id,  0, $activity->year )->row();
 		$physical_plan = $this->services->get_physical_prefix_sum( $physical_plan );
 		$physical_plan->title = 'FISIK';
 
@@ -629,9 +639,9 @@ class Activity extends Uadmin_Controller {
 		#REALISASI REALISASI REALISASI REALISASI
 		$table = NULL;
 		$table = $this->services->get_month_table_config( $this->current_page );
-		$budget_realization = $this->budget_model->budget_by_activity_id( $activity_id,  1 )->row();
+		$budget_realization = $this->budget_model->budget_by_activity_id( $activity_id,  1, $activity->year )->row();
 		$budget_realization->title = 'KEUANGAN ( Ribu )';
-		$physical_realization = $this->physical_model->physical_by_activity_id( $activity_id,  1 )->row();
+		$physical_realization = $this->physical_model->physical_by_activity_id( $activity_id,  1, $activity->year )->row();
 		$physical_realization = $this->services->get_physical_prefix_sum( $physical_realization );
 		$physical_realization->title = 'FISIK';
 		
@@ -888,7 +898,7 @@ class Activity extends Uadmin_Controller {
         {
             $this->data['message'] = (validation_errors() ? validation_errors() : ($this->ion_auth->errors() ? $this->ion_auth->errors() : $this->session->flashdata('message')));
             if(  !empty( validation_errors() ) || $this->ion_auth->errors() ) $this->session->set_flashdata('alert', $this->alert->set_alert( Alert::DANGER, $this->data['message'] ) );
-
+			$activity = $this->activity_model->activity( $activity_id )->row();
             $form = $this->services->get_form_data( $activity_id );
 
 			$form_data = $form[0];
@@ -906,8 +916,8 @@ class Activity extends Uadmin_Controller {
 			$this->data[ "contents" ] .=  $form_data_1.$form_data_3;
 			
 			$table = $this->services->get_planning_table_config( $this->current_page );
-			$budget_plan = $this->budget_model->budget_by_activity_id( $activity_id,  0 )->row();
-			$physical_plan = $this->physical_model->physical_by_activity_id( $activity_id,  0 )->row();
+			$budget_plan = $this->budget_model->budget_by_activity_id( $activity_id,  0, $activity->year )->row();
+			$physical_plan = $this->physical_model->physical_by_activity_id( $activity_id,  0, $activity->year )->row();
 			$table[ "budget" ] = $budget_plan;
 			$table[ "physical" ] = $physical_plan;
 			$table = $this->load->view('user/activity/sub_package/budget_planning_input', $table, true);

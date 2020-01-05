@@ -1,15 +1,12 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
-
 class Budget_model extends MY_Model
 {
   protected $table = "budget";
-
   function __construct() {
       parent::__construct( $this->table );
       parent::set_join_key( 'budget_id' );
   }
-
   /**
    * create
    *
@@ -125,28 +122,6 @@ class Budget_model extends MY_Model
     return TRUE;
   }
 
-    /**
-   * group
-   *
-   * @param int|array|null $id = id_budget
-   * @return static
-   * @author madukubah
-   */
-  // public function budget( $id = NULL  )
-  // {
-  //     if (isset($id))
-  //     {
-  //       $this->where($this->table.'.id', $id);
-  //     }
-
-  //     $this->limit(1);
-  //     $this->order_by($this->table.'.id', 'desc');
-
-  //     $this->budgets(  );
-
-  //     return $this;
-  // }
-
   /**
    * budget
    *
@@ -171,11 +146,12 @@ class Budget_model extends MY_Model
    * @return static
    * @author madukubah
    */
-  public function budget_by_activity_id( $activity_id,  $status = 0, $rpm_pln = NULL )
+  public function budget_by_activity_id( $activity_id,  $status = 0, $year=NULL )
   {
+      $rpm_pln = NULL;
       $this->db->where( 'activity.id', $activity_id);
       $this->db->group_by( 'activity.id');
-      return $this->sum( 0 , NULL, NULL, NULL, NULL, $status, $rpm_pln );
+      return $this->sum( 0 , NULL, NULL, $year, NULL, $status, $rpm_pln );
   }
 
    /**
@@ -206,7 +182,7 @@ class Budget_model extends MY_Model
           "nomenclature.code",
           "nomenclature.name",
           "activity.*",
-          "'F' as AuFnF",
+          // "'F' as AuFnF",
           "'F' as AUpLkS",
           "sum( activity.total ) as total",
           "SUM( activity.jan ) as jan",
@@ -256,7 +232,7 @@ class Budget_model extends MY_Model
         $this->db->join( "nomenclature","on nomenclature.id = activity.nomenclature_id", "inner" );
 
         if ( isset( $year ) )
-            $this->db->where( 'activity.year', $year);
+           $this->db->where( 'activity.year', $year);
         if ( isset( $nomenclature_id ) )
             $this->db->where( 'nomenclature_id', $nomenclature_id);
         if ( isset( $pptk_id ) )

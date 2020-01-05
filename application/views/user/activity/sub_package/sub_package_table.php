@@ -11,13 +11,13 @@
                     F/<br>
                     NF</strong>
                 </td>
-                <td rowspan="2" align="center" >
+                <!-- <td rowspan="2" align="center" >
                     <strong>AU<br>
                             P/<br>
                             L/<br>
                             K/<br>
                             S</strong>
-                </td>
+                </td> -->
                 <td rowspan="2"  align="center" >
                     <strong>Pagu <br>
                         (Rp Ribu) </strong>
