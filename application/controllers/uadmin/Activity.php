@@ -947,6 +947,7 @@ class Activity extends Uadmin_Controller {
 		$planing_data_param["activity_id"] = $data_param["id"];
 		$this->physical_model->delete( $planing_data_param );
 		$this->budget_model->delete( $planing_data_param );
+		$this->problem_model->delete( $planing_data_param );
 
 		if ($this->activity_model->delete($data_param)) {
 			$image_url = $this->services->get_photo_upload_config("")["upload_path"];
