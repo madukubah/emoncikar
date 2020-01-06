@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 24, 2019 at 04:47 AM
+-- Generation Time: Jan 06, 2020 at 03:38 PM
 -- Server version: 10.1.34-MariaDB
--- PHP Version: 5.6.37
+-- PHP Version: 7.2.8
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -47,16 +47,6 @@ CREATE TABLE `activity` (
   `images` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
---
--- Dumping data for table `activity`
---
-
-INSERT INTO `activity` (`id`, `nomenclature_id`, `AuFnF`, `AUpLkS`, `title`, `location`, `quantity`, `unit`, `ceiling_budget`, `ceiling_rpm`, `ceiling_pln`, `year`, `pptk_id`, `latitude`, `longitude`, `images`) VALUES
-(30, 3, 'F', 'AU', 'Administrasi Umum Satker PLP', 'KOTA KENDARI', 4, 'KAB/KOTA', 20000, 20000, 0, 2019, 1, '0', '0', 'default.jpg;default.jpg;default.jpg;default.jpg;default.jpg'),
-(31, 3, 'F', 'AU', 'pembangunan', 'KOTA KENDARI', 4, 'KAB/KOTA', 30000, 30000, 0, 2019, 2, '0111', '0222', 'default.jpg;default.jpg;default.jpg;default.jpg;100_1576345552.JPG'),
-(32, 3, 'F', 'AU', 'bangun bangun', 'KOTA KENDARI', 4, 'KAB/KOTA', 20000, 20000, 0, 2019, 1, '0', '0', 'default.jpg;default.jpg;default.jpg;default.jpg;100_1576514807.jpg'),
-(34, 3, 'F', 'AU', 'SPAM', 'KOTA KENDARI', 4, 'KAB/KOTA', 200000, 200000, 0, 2019, 1, '0', '0', 'default.jpg;default.jpg;default.jpg;default.jpg;default.jpg');
-
 -- --------------------------------------------------------
 
 --
@@ -72,21 +62,6 @@ CREATE TABLE `budget` (
   `rpm_pln` int(2) NOT NULL,
   `status` int(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `budget`
---
-
-INSERT INTO `budget` (`id`, `activity_id`, `nominal`, `month`, `year`, `rpm_pln`, `status`) VALUES
-(3, 30, 10000, 2, 2019, 0, 0),
-(4, 30, 10000, 3, 2019, 0, 0),
-(7, 31, 20000, 3, 2019, 0, 1),
-(8, 31, 10000, 4, 2019, 0, 1),
-(10, 31, 30000, 3, 2019, 0, 0),
-(11, 32, 12000, 2, 2019, 0, 0),
-(12, 32, 2000, 3, 2019, 0, 0),
-(13, 32, 6000, 4, 2019, 0, 0),
-(15, 34, 200000, 2, 2019, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -153,8 +128,8 @@ INSERT INTO `menus` (`id`, `menu_id`, `name`, `link`, `list_id`, `icon`, `status
 (108, 2, 'Pengguna', 'uadmin/users', 'users_index', 'home', 0, 100, '-'),
 (109, 2, 'Data Kegiatan', 'uadmin/activity', 'activity_index', 'file', 1, 2, '-'),
 (110, 2, 'Tambah Kegiatan', 'uadmin/activity/add', 'activity_add', 'plus-square', 1, 3, '-'),
-(111, 2, 'pptk', 'uadmin/pptk', 'pptk_index', 'users', 1, 4, '-'),
-(112, 2, 'setting', 'uadmin/setting', '-', 'home', 1, 5, '-'),
+(111, 2, 'PPTK', 'uadmin/pptk', 'pptk_index', 'users', 1, 4, '-'),
+(112, 2, 'Setting', 'uadmin/setting', '-', 'home', 1, 5, '-'),
 (113, 112, 'Nomenklatur', 'uadmin/nomenclature', 'nomenclature_index', 'file', 1, 1, '-');
 
 -- --------------------------------------------------------
@@ -194,21 +169,6 @@ CREATE TABLE `physical` (
   `status` int(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
---
--- Dumping data for table `physical`
---
-
-INSERT INTO `physical` (`id`, `activity_id`, `progress`, `month`, `year`, `status`) VALUES
-(5, 30, 100, 2, 2019, 0),
-(8, 31, 30, 3, 2019, 1),
-(9, 31, 70, 4, 2019, 1),
-(11, 31, 100, 3, 2019, 0),
-(12, 32, 30, 2, 2019, 0),
-(13, 32, 30, 3, 2019, 0),
-(14, 32, 30, 4, 2019, 0),
-(15, 32, 10, 5, 2019, 0),
-(17, 34, 100, 2, 2019, 0);
-
 -- --------------------------------------------------------
 
 --
@@ -247,15 +207,6 @@ CREATE TABLE `problem` (
   `required_support` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
---
--- Dumping data for table `problem`
---
-
-INSERT INTO `problem` (`id`, `activity_id`, `report_date`, `problem_description`, `problem_date`, `solution`, `authorities`, `settlement_date`, `required_support`) VALUES
-(2, 31, '2019-12-16', 'permasalahan', '2019-12-16', 'solusi', 'pejabat', '2019-12-19', 'dukungan\r\n'),
-(3, 32, '2019-12-16', 'yuhu', '2019-12-16', 'yihi', 'yaha', '2019-12-16', 'ehe\r\n'),
-(4, 30, '2019-12-19', 'permasalahan', '2019-12-19', 'upaya yang di perlukan', 'pejabat yang berwenang', '2019-12-19', 'dukungan atasan yang di perlukan');
-
 -- --------------------------------------------------------
 
 --
@@ -290,8 +241,8 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `ip_address`, `username`, `password`, `email`, `activation_selector`, `activation_code`, `forgotten_password_selector`, `forgotten_password_code`, `forgotten_password_time`, `remember_selector`, `remember_code`, `created_on`, `last_login`, `active`, `first_name`, `last_name`, `phone`, `image`, `address`) VALUES
-(1, '127.0.0.1', 'admin@fixl.com', '$2y$12$XpBgMvQ5JzfvN3PTgf/tA.XwxbCOs3mO0a10oP9/11qi1NUpv46.u', 'admin@fixl.com', NULL, '', NULL, NULL, NULL, NULL, NULL, 1268889823, 1576251648, 1, 'Admin', 'istrator', '081342989185', 'USER_1_1571554027.jpeg', 'admin'),
-(13, '::1', 'admin@admin.com', '$2y$10$JXswvmf3LROR1/eRyeTZBe02ezMjL4vCkO3VkI9Z3GiXpN772BF22', 'admin@admin.com', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1568678256, 1577159207, 1, 'admin', '.', '00', 'USER_13_1576759794.png', 'jln mutiara no 8');
+(1, '127.0.0.1', 'admin@fixl.com', '$2y$12$XpBgMvQ5JzfvN3PTgf/tA.XwxbCOs3mO0a10oP9/11qi1NUpv46.u', 'admin@fixl.com', NULL, '', NULL, NULL, NULL, NULL, NULL, 1268889823, 1578214501, 1, 'Admin', 'istrator', '081342989185', 'USER_1_1571554027.jpeg', 'admin'),
+(13, '::1', 'admin@admin.com', '$2y$10$L5hzKcil32fXqus1bnBuNuxLrWq/6cOU8q1o0E2ahM6iddz4Wio06', 'admin@admin.com', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1568678256, 1578315739, 1, 'admin', '.', '00', 'USER_13_1576516704.png', 'jln mutiara no 8');
 
 -- --------------------------------------------------------
 
@@ -403,13 +354,13 @@ ALTER TABLE `users_groups`
 -- AUTO_INCREMENT for table `activity`
 --
 ALTER TABLE `activity`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
 
 --
 -- AUTO_INCREMENT for table `budget`
 --
 ALTER TABLE `budget`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- AUTO_INCREMENT for table `groups`
@@ -421,7 +372,7 @@ ALTER TABLE `groups`
 -- AUTO_INCREMENT for table `login_attempts`
 --
 ALTER TABLE `login_attempts`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `menus`
@@ -439,7 +390,7 @@ ALTER TABLE `nomenclature`
 -- AUTO_INCREMENT for table `physical`
 --
 ALTER TABLE `physical`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 
 --
 -- AUTO_INCREMENT for table `pptk`
@@ -451,7 +402,7 @@ ALTER TABLE `pptk`
 -- AUTO_INCREMENT for table `problem`
 --
 ALTER TABLE `problem`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `users`

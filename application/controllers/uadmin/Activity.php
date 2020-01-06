@@ -934,9 +934,8 @@ class Activity extends Uadmin_Controller {
         }
 	}
 
-	public function delete()
+	public function delete( )
 	{
-
 		if (!($_POST)) redirect(site_url($this->current_page));
 
 		$data_param['id'] 	= $this->input->post('id');
