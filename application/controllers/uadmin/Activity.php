@@ -403,7 +403,7 @@ class Activity extends Uadmin_Controller {
 		$this->data["key"] = $this->input->get('key', FALSE);
 		$this->data["code"] = $code;
 		// $this->data["activity_id"] = $nomenclature_id;
-		$this->data["tab_url"] = site_url(  ).'uadmin/activity/nomenclature/'.$nomenclature_id;
+		$this->data["tab_url"] = site_url(  ).'/uadmin/activity/nomenclature/'.$nomenclature_id;
 		$this->data["alert"] = (isset($alert)) ? $alert : NULL ;
 		$this->data["current_page"] = $this->current_page;
 		$this->data["block_header"] = "Pelaksanaan Anggaran Per Paket Pekerjaan TA ".$year." <br> ".strtoupper( $nomenclature->name ) ;

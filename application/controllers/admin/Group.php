@@ -14,6 +14,7 @@ class Group extends Admin_Controller {
 			'group_model',
 		));
 	}
+	
 	public function index()
 	{
 		$page = ($this->uri->segment(4)) ? ($this->uri->segment(4) -  1 ) : 0;

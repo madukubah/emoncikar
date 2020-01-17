@@ -5,7 +5,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Alert  {
 	const SUCCESS          = 1;
 	const DANGER           = 0;
-	const WARNING           	= 2;
+	const WARNING          = 2;
 
 	public function __construct(  )
 	{

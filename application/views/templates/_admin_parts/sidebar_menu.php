@@ -16,7 +16,7 @@
                 <img class="img-circle elevation-2" src="<?php echo $user_image ?>" width="48" height="48" alt="User" />
         </div>
         <div class="info">
-          <a href="<?= base_url('user/profile') ?>" class="d-block"><?php echo ucwords($this->session->userdata('user_profile_name')) ?></a>
+          <a href="<?= site_url('user/profile') ?>" class="d-block"><?php echo ucwords($this->session->userdata('user_profile_name')) ?></a>
         </div>
       </div>
       
@@ -82,18 +82,11 @@
 <script type="text/javascript">
     function menuActive(id) {
         id = id.trim();
-        // console.log(id);
-        // console.log(a = document.getElementById(id.trim()));
         a = document.getElementById(id.trim())
-        // // var a =document.getElementById("menu").children[num-1].className="active";
-        // var a = document.getElementById(id.trim());
-        // console.log(a.parentNode.parentNode);
         a.classList.add("active");
         b = a.parentNode.parentNode.parentNode;
         b.classList.add("menu-open");
         b.children[0].classList.add("active");
-        // console.log( b.children[0] );
-        // document.getElementById(id).classList.add("active");
 
     }
 </script>

@@ -55,7 +55,7 @@
                 <?php foreach( $header as $key => $value ):?>
                     <?php if( $key == "title" ):?>
                         <td>
-                            <a href="<?= site_url(  ) ?>uadmin/activity/detail/<?= $row->id?>">
+                            <a href="<?= site_url(  ) ?>/uadmin/activity/detail/<?= $row->id?>">
                                 <?= $row->$key?>
                             </a>
                         </td>
