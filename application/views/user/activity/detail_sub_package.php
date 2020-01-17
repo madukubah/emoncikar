@@ -4,6 +4,8 @@
       <div class="row mb-2">
         <div class="col-sm-6">
           <h5 class="m-0 text-dark"><?php echo $block_header ?></h5>
+          <a href="<?php echo $url_back  ?>" class="btn  btn-sm btn-danger waves-effect" >Kembali </a>
+
         </div>
       </div>
     </div>
@@ -21,13 +23,13 @@
                 ?>
               </div>
               <div class="row">
-                <div class="col-6">
+                <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
                   <h5>
                     <?php echo strtoupper($header) ?>
                     <p class="text-secondary"><small><?php echo $sub_header ?></small></p>
                   </h5>
                 </div>
-                <div class="col-6">
+                <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
                   <div class="row">
                     <div class="col-2"></div>
                     <div class="col-10">
@@ -56,13 +58,13 @@
                 ?>
               </div>
               <div class="row">
-                <div class="col-6">
+                <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
                   <h5>
                     <?php echo strtoupper( "Rencana" ) ?>
                     <p class="text-secondary"><small><?php echo $sub_header ?></small></p>
                   </h5>
                 </div>
-                <div class="col-6">
+                <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
                   <div class="row">
                     <div class="col-2"></div>
                     <div class="col-10">
@@ -89,7 +91,7 @@
                 ?>
               </div>
               <div class="row">
-                <div class="col-2">
+                <div class="col-lg-2 col-md-12 col-sm-12 col-xs-12">
                   <h5>
                     <?php echo strtoupper( "Realisasi" ) ?>
                     <p class="text-secondary"><small><?php echo $sub_header ?></small></p>
@@ -151,13 +153,13 @@
                 ?>
               </div>
               <div class="row">
-                <div class="col-6">
+                <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
                   <h5>
                     <?php echo strtoupper( "Foto Progress" ) ?>
                     <p class="text-secondary"><small><?php echo $sub_header ?></small></p>
                   </h5>
                 </div>
-                <div class="col-6">
+                <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
                   <div class="row">
                     <div class="col-2"></div>
                     <div class="col-10">
@@ -178,7 +180,7 @@
                     // $images = explode(";", $activity->images);
                     foreach ( $images_arr as $i => $image) :
                   ?>
-                    <div class="col-3">
+                    <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
                       <div class="card"  >
                         <div class="card-body">
                           <label for=""> <?= $title[$i] ?> </label>
@@ -215,13 +217,13 @@
                 ?>
               </div>
               <div class="row">
-                <div class="col-6">
+                <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
                   <h5>
                     <?php echo strtoupper( "permasalahan" ) ?>
                     <p class="text-secondary"><small><?php echo $sub_header ?></small></p>
                   </h5>
                 </div>
-                <div class="col-6">
+                <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
                   <div class="row">
                     <div class="col-2"></div>
                     <div class="col-10">
@@ -238,6 +240,12 @@
               <?php echo (isset($problem_table)) ? $problem_table : '';  ?>
               <!--  -->
             </div>
+          </div>
+          <!-- // create report -->
+          <div class="card">
+              <div class="card-body">
+                  <a href="<?php echo site_url("uadmin/activity/print_pdf/").$activity->id ?>" class="btn  btn-md btn-success waves-effect" target="_blank">Cetak Laporan </a>
+              </div> 
           </div>
           <!--  -->
         </div>

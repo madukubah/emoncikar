@@ -32,6 +32,12 @@
                 foreach( $datas as $data )
                 {
                     if( ( !$data->status )  ) continue;
+                    if( ( strtolower( $data->link ) == 'header' )  ) :
+                      ?>
+                          <li class="nav-header"><?= $data->name?></li>
+                      <?php
+                          continue;
+                      endif;
 
                     if( !empty( $data->branch )  )
                     {

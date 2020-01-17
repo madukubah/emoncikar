@@ -186,6 +186,8 @@ class Activity extends Uadmin_Controller {
 		{
 			case "recap" :
 				// die;
+				$this->session->set_flashdata('last_url', site_url('uadmin/activity/nomenclature/').$nomenclature_id  );
+
 				$table = $this->services->get_sub_package_table_config( $this->current_page );
 				$table[ "rows" ] = $this->activity_model->activities( 0, NULL, $nomenclature_id, $year , $pptk_id )->result();
 				$sum = $this->activity_model->sum( 0, NULL, $nomenclature_id, $year , $pptk_id )->row();
@@ -609,6 +611,8 @@ class Activity extends Uadmin_Controller {
 			##############################################
 		}
 		if( !isset($activity_id) ) redirect(site_url(  $this->current_page ));  
+		$this->data[ "url_back" ] = ( $this->session->flashdata('last_url') ) ? $this->session->flashdata('last_url') : site_url( $this->current_page ) ;
+		$this->session->set_flashdata('last_url', $this->data[ "url_back" ]  );
 
 		$form_data = $form[0];
 		$form_data = $this->load->view('templates/form/plain_form_readonly', $form_data , TRUE ) ;
@@ -727,7 +731,6 @@ class Activity extends Uadmin_Controller {
 			);
 		endforeach;
 		$this->data["images_arr"] =  $images_arr;
-
 		####################################################
 		# PHOTO
 		####################################################
@@ -962,5 +965,52 @@ class Activity extends Uadmin_Controller {
 			$this->session->set_flashdata('alert', $this->alert->set_alert(Alert::DANGER, $this->activity_model->errors()));
 		}
 		redirect(site_url($this->current_page));
+	}
+	public function print_pdf( $activity_id  )
+	{
+		$this->load->library('pdf');
+		$pdf = new Pdf('P', 'mm', 'A4', true, 'UTF-8', false);
+
+		$pdf->SetTitle("Laporan Kegiatan");
+
+		$pdf->setPrintHeader(false);
+		$pdf->setPrintFooter(false);
+
+		$pdf->SetTopMargin(10);
+		$pdf->SetLeftMargin(10);
+		$pdf->SetRightMargin(10);
+		$pdf->SetAutoPageBreak(true);
+		$pdf->SetAuthor('CIPTA KARYA');
+		$pdf->SetDisplayMode('real', 'default');
+		$pdf->AddPage();
+		$pptks = $this->pptk_model->pptks()->result();
+		$pptk_select = array();
+		foreach( $pptks as $pptk )
+		{
+			$pptk_select[ $pptk->id ] = $pptk->name;
+		}
+		$nomenclatures = $this->nomenclature_model->nomenclatures()->result();
+		$nomenclatures_select = array();
+		foreach( $nomenclatures as $nomenclature )
+		{
+			$nomenclatures_select[ $nomenclature->id ] = "[{$nomenclature->code}] {$nomenclature->name}" ; ;
+		}
+		$data["pptk_select"] 			= $pptk_select;
+		$data["nomenclatures_select"] 	= $nomenclatures_select;
+		$data["image_url"] 				= $this->services->get_photo_upload_config("")["image_path"];
+		$data["activity"] 				= $this->activity_model->activity( $activity_id )->row();
+		$data[ "problems" ] 			= $this->problem_model->problems( $start = 0 , $limit = NULL, $nomenclature_id = NULL, $year = NULL, $pptk_id = NULL,  $activity_id  )->result();
+
+
+		$html = $this->load->view('templates/report/activity', $data, true);
+		$pdf->writeHTML($html, true, false, true, false, '');
+
+		$pdf->SetFont('times', NULL, 9);
+		// $html = $this->load->view('templates/report/candidates', $this->data, true);
+		// $pdf->writeHTML($html, true, false, true, false, '');
+		$title = str_replace(" ", "_", "Laporan Kegiatan" );
+		//sleep ( 15 );
+		ob_end_clean();
+		$pdf->Output($title . ".pdf", 'I');
 	}
 }
