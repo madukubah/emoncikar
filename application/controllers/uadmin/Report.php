@@ -2,6 +2,19 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 require_once APPPATH."/libraries/Excel.php"; 
 
+// Load library phpspreadsheet
+require_once( APPPATH . "../excel/vendor/" . DIRECTORY_SEPARATOR . "autoload.php") ;
+// require_once( APPPATH . "../excel/vendor/" . DIRECTORY_SEPARATOR . "phpoffice/phpspreadsheet/samples/Header.php") ;
+// require __DIR__ . '/../Header.php';
+
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\IOFactory;
+use PhpOffice\PhpSpreadsheet\Helper\Sample;
+		
+// End load library phpspreadsheet
+
+
 class Report extends Uadmin_Controller {
 	private $services = null;
     private $name = null;
@@ -67,15 +80,48 @@ class Report extends Uadmin_Controller {
 	}
 	public function generate_excel()
 	{	
-		$nomenclature_id =  $this->input->post( 'nomenclature_id' );
-		$nomenclature_id =  ( $nomenclature_id != 0 ) ? $nomenclature_id : NULL ;
-		$year =  $this->input->post( 'year' );
-		$year =  ( $year != 0 ) ? $year : NULL ;
-		$excel = new Excel;
+		$spreadsheet = new Spreadsheet();
+		$spreadsheet->setActiveSheetIndex(0)
+			->setCellValue('A1', 'Hello')
+			->setCellValue('B2', 'world!')
+			->setCellValue('C1', 'Hello')
+			->setCellValue('D2', 'world!');
 
-		$activities = $this->activity_model->activities( 0, NULL, $nomenclature_id, $year  )->result();
-		// var_dump( $activities );die;
-		$excel->generate( $activities );
+		// Miscellaneous glyphs, UTF-8
+		$spreadsheet->setActiveSheetIndex(0)
+			->setCellValue('A4', 'Miscellaneous glyphs')
+			->setCellValue('A5', 'éàèùâêîôûëïüÿäöüç');
 
+		// Redirect output to a client’s web browser (Xlsx)
+		header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+		header('Content-Disposition: attachment;filename="test.xlsx"');
+		header('Cache-Control: max-age=0');
+		// If you're serving to IE 9, then the following may be needed
+		header('Cache-Control: max-age=1');
+
+		// If you're serving to IE over SSL, then the following may be needed
+		header('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
+		header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT'); // always modified
+		header('Cache-Control: cache, must-revalidate'); // HTTP/1.1
+		header('Pragma: public'); // HTTP/1.0
+		
+		$writer = new Xlsx($spreadsheet);
+		$filename = 'test.xlsx';
+		ob_end_clean();
+		$writer->save('php://output');
+		exit;
+		// exit;
+		// return;
+		// $nomenclature_id =  $this->input->post( 'nomenclature_id' );
+		// $nomenclature_id =  ( $nomenclature_id != 0 ) ? $nomenclature_id : NULL ;
+		// $year =  $this->input->post( 'year' );
+		// $year =  ( $year != 0 ) ? $year : NULL ;
+		// $excel = new Excel;
+		// // echo 'aaaaa';die;
+
+		// $activities = $this->activity_model->activities( 0, NULL, $nomenclature_id, $year  )->result();
+		// // var_dump( $activities );die;
+		// $excel->generate( $activities );
+		
 	}
 }

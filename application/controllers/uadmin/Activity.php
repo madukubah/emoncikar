@@ -999,6 +999,7 @@ class Activity extends Uadmin_Controller {
 		$data["nomenclatures_select"] 	= $nomenclatures_select;
 		$data["image_url"] 				= $this->services->get_photo_upload_config("")["image_path"];
 		$data["activity"] 				= $this->activity_model->activity( $activity_id )->row();
+		// var_dump( $data["activity"] );die;
 		$data[ "problems" ] 			= $this->problem_model->problems( $start = 0 , $limit = NULL, $nomenclature_id = NULL, $year = NULL, $pptk_id = NULL,  $activity_id  )->result();
 
 

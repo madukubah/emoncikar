@@ -56,7 +56,7 @@
         <td style="width:4% ">7.</td>
         <td style="width:30% ">APBD Provinsi <br>(dalam ribuan Rp 1.000)</td>
         <td style="width:5% "> :</td>
-        <td style="width:50% "><?= $activity->ceiling_budget?> </td>
+        <td style="width:50% "> Rp. <?= number_format( $activity->ceiling_budget )?> </td>
     </tr>
     <tr style="font-size:12px;border-bottom:0.5px solid black" >
         <td style="width:4% ">8.</td>
