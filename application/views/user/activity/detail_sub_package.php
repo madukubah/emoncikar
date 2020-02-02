@@ -4,7 +4,7 @@
       <div class="row mb-2">
         <div class="col-sm-6">
           <h5 class="m-0 text-dark"><?php echo $block_header ?></h5>
-          <a href="<?php echo $url_back  ?>" class="btn  btn-sm btn-danger waves-effect" >Kembali </a>
+          <a href="<?php echo $url_back  ?>" class="btn  btn-sm btn-warning waves-effect" >Kembali </a>
 
         </div>
       </div>
@@ -51,7 +51,7 @@
         <!-- PLANNING -->
         <div class="col-12">
           <div class="card">
-            <div class="card-header">
+            <div class="card-header bg-info">
               <div class="col-12">
                 <?php
                 // echo $alert;
@@ -84,14 +84,14 @@
           </div>
           <!-- Realisasi -->
           <div class="card">
-            <div class="card-header">
+            <div class="card-header bg-success">
               <div class="col-12">
                 <?php
                 // echo $alert;
                 ?>
               </div>
               <div class="row">
-                <div class="col-lg-2 col-md-12 col-sm-12 col-xs-12">
+                <div class="col-lg-2 col-md-12 col-sm-12 col-xs-12 ">
                   <h5>
                     <?php echo strtoupper( "Realisasi" ) ?>
                     <p class="text-secondary"><small><?php echo $sub_header ?></small></p>
@@ -103,11 +103,11 @@
                       <div class="float-right">
                         <ul class="row nav nav-pills  p-2">
                           <li class="col text-center nav-item">
-                            <a class="nav-link active" href="#tab_1" data-toggle="tab" id="house" >
+                            <a class="nav-link active text-white " href="#tab_1" data-toggle="tab" id="house" >
                               Lihat </a>
                           </li>
-                          <li class="col text-center nav-item">
-                            <a class="nav-link " href="#tab_2" data-toggle="tab" id="no_house" >
+                          <li class="col  text-center nav-item">
+                            <a class="nav-link text-white " href="#tab_2" data-toggle="tab" id="no_house" >
                               Edit 
                             </a>
                           </li>

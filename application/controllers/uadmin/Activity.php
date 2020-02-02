@@ -611,7 +611,7 @@ class Activity extends Uadmin_Controller {
 			##############################################
 		}
 		if( !isset($activity_id) ) redirect(site_url(  $this->current_page ));  
-		$this->data[ "url_back" ] = ( $this->session->flashdata('last_url') ) ? $this->session->flashdata('last_url') : site_url( $this->current_page ) ;
+		$this->data[ "url_back" ] = site_url(  $this->current_page )."nomenclature/".$activity->nomenclature_id ;//( $this->session->flashdata('last_url') ) ? $this->session->flashdata('last_url') : site_url( $this->current_page ) ;
 		$this->session->set_flashdata('last_url', $this->data[ "url_back" ]  );
 
 		$form_data = $form[0];

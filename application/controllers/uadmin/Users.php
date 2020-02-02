@@ -19,6 +19,7 @@ class Users extends Uadmin_Controller
 			"suplier" => 'Suplier',
 			"transporter" => 'Transporter',
 		);
+		$this->data["menu_list_id"] = "users_index";
 		
 	} 
 	public function index( $id_user = NULL )
@@ -71,7 +72,7 @@ class Users extends Uadmin_Controller
 
         if ( $this->form_validation->run() === TRUE )
         {
-          $group_id = $this->input->post('group_id');
+          $group_id = 3;//USER //$this->input->post('group_id');
 
         //   $email = $this->input->post('email') ;
         //   $phone = $this->input->post('phone') ;
@@ -88,11 +89,11 @@ class Users extends Uadmin_Controller
             'email' => $this->input->post('email'),
             'phone' => $this->input->post('phone'),
             'address' => $this->input->post('address'),
-          );
+		  );
+			// var_dump( $additional_data );die;
 		}
 		
 		$identity_mode = NULL;
-
         if ($this->form_validation->run() === TRUE && ( $user_id =  $this->ion_auth->register($identity, $password, $email,$additional_data, [$group_id], $identity_mode ) ) )
         {
             $this->session->set_flashdata('alert', $this->alert->set_alert( Alert::SUCCESS, $this->ion_auth->messages() ) );
@@ -112,7 +113,8 @@ class Users extends Uadmin_Controller
 			$this->data["header"] = "Tambah User ";
 			$this->data["sub_header"] = 'Klik Tombol Action Untuk Aksi Lebih Lanjut';
 
-            $form_data = $this->ion_auth->get_form_data();
+			$form_data = $this->ion_auth->get_form_data();
+			unset( $form_data['form_data']['group_id'] );
             $form_data = $this->load->view('templates/form/plain_form', $form_data , TRUE ) ;
 
             $this->data[ "contents" ] =  $form_data;
@@ -126,7 +128,7 @@ class Users extends Uadmin_Controller
         $tables = $this->config->item('tables', 'ion_auth');
         $identity_column = $this->config->item('identity', 'ion_auth');
         $this->form_validation->set_rules( $this->ion_auth->get_validation_config() );
-        $this->form_validation->set_rules('phone', "No Telepon", 'trim|required|is_unique[users.phone]');
+        // $this->form_validation->set_rules('phone', "No Telepon", 'trim|required|is_unique[users.phone]');
 		if ( $this->input->post('password') )
         {
             $this->form_validation->set_rules( 'password',"Kata Sandi",'required|min_length[' . $this->config->item('min_password_length', 'ion_auth') . ']|max_length[' . $this->config->item('max_password_length', 'ion_auth') . ']|matches[password_confirm]' );            
@@ -136,14 +138,15 @@ class Users extends Uadmin_Controller
         if ( $this->form_validation->run() === TRUE )
         {
 			$user_id = $this->input->post('id');
-			$group_id = $this->input->post('group_id');
+			// $group_id = $this->input->post('group_id');
       
             $data = array(
               'first_name' => $this->input->post('first_name'),
               'last_name' => $this->input->post('last_name'),
               'email' => $this->input->post('email'),
               'phone' => $this->input->post('phone'),
-              'group_id' => $this->input->post('group_id'),
+              'address' => $this->input->post('address'),
+            //   'group_id' => $this->input->post('group_id'),
             );
 			
             if ( $this->input->post('password') )

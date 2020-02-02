@@ -28,19 +28,26 @@ class Excel extends PHPExcel {
 		$this->getActiveSheet()->setTitle('Laporan');
         
         // Value Started
-        $this->getActiveSheet()->mergeCells('A2:F2');
+        $this->getActiveSheet()->mergeCells('A2:K2');
 		$this->getActiveSheet()->setCellValue('A2', '');
 		$this->getActiveSheet()->getStyle('A2')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
 		$this->getActiveSheet()->getStyle('A2')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
 		$this->getActiveSheet()->getStyle('A2')->getFont()->setSize(16);
         $this->getActiveSheet()->getStyle('A2')->getFont()->setBold(true);
         // Value Started
-        $this->getActiveSheet()->mergeCells('A3:F3');
+        $this->getActiveSheet()->mergeCells('A3:K3');
 		$this->getActiveSheet()->setCellValue('A3', ' DATA BASE KEGIATAN BIDANG CIPTA KARYA ');
 		$this->getActiveSheet()->getStyle('A3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
 		$this->getActiveSheet()->getStyle('A3')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
 		$this->getActiveSheet()->getStyle('A3')->getFont()->setSize(16);
         $this->getActiveSheet()->getStyle('A3')->getFont()->setBold(true);
+
+        $this->getActiveSheet()->mergeCells('E4:F4');
+        $this->getActiveSheet()->setCellValue('E4', ' Tanggal: '.date( 'd M Y' ));
+        $this->getActiveSheet()->getStyle('E4')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+		$this->getActiveSheet()->getStyle('E4')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
+		$this->getActiveSheet()->getStyle('E4')->getFont()->setSize(12);
+        $this->getActiveSheet()->getStyle('E4')->getFont()->setBold(true);
 
         // header
         // $this->getActiveSheet()->mergeCells('A5:E5');
@@ -86,6 +93,15 @@ class Excel extends PHPExcel {
             $this->getActiveSheet()->getStyle( ( chr( 65+$ind ).'6' ))->getFont()->setSize(11);
             $this->getActiveSheet()->getStyle( ( chr( 65+$ind ).'6' ) )->getFont()->setBold(true);
             $this->getActiveSheet()->getStyle(( chr( 65+$ind ).'6' ))->getAlignment()->setWrapText(true);
+
+            $this->getActiveSheet()->getStyle(( chr( 65+$ind ).'6' ))->applyFromArray(
+                array(
+                    'fill' => array(
+                        'type' => PHPExcel_Style_Fill::FILL_SOLID,
+                        'color' => array('rgb' => '9ba683')
+                    )
+                )
+            );
 
         endforeach;
         // ROWS

@@ -68,7 +68,6 @@
                                     <br>
                                     <br>
                                     <?php echo ( isset( $edit_photo )  ) ? $edit_photo : '' ;  ?>
-                                    
                                 </div>
                             </div>
                     </div>

@@ -156,7 +156,7 @@ class User_services
 			  'value' => $this->form_validation->set_value('phone', $this->phone),			  
 			),
 			"group_id" => array(
-				'type' => 'text',
+				'type' => 'hidden',
 				'label' => "User Group",
 				'value' => $group_select[ $this->group_id ],
 			),

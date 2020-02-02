@@ -346,7 +346,7 @@ class Activity_model extends MY_Model
 
   {
 
-      $year || $year = date('Y');
+      // $year || $year = date('Y');
 
       $this->db->select([
 

@@ -455,8 +455,6 @@ class Activity_services
           $this->AuFnF            = $activity->AuFnF;
       }
       // echo var_dump( $activity ); die;
-
-
       $pptks = $this->pptk_model->pptks()->result();
       $pptk_select = array();
       foreach( $pptks as $pptk )

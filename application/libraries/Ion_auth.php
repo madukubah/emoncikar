@@ -596,11 +596,11 @@ class Ion_auth
 				 'label' =>('No Telepon'),
 				 'rules' =>  'trim|required',
 			),
-			 array(
-				'field' => 'group_id',
-				 'label' => "User Group",
-				 'rules' =>  'trim|required',
-			 ),
+			//  array(
+			// 	'field' => 'group_id',
+			// 	 'label' => "User Group",
+			// 	 'rules' =>  'trim|required',
+			//  ),
 		);
 		
 		return $config;
@@ -677,7 +677,7 @@ class Ion_auth
 			  'value' => $this->form_validation->set_value('phone', $this->phone),			  
 			),
 			"group_id" => array(
-				'type' => 'select',
+				'type' => 'hidden',
 				'label' => "User Group",
 				'options' => $group_select,
 				'selected' => $this->group_id,
