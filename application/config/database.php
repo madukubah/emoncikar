@@ -81,6 +81,7 @@ $db['default'] = array(
 	// 'username' => 'root',
 	// 'password' => '',
 	'database' => 'ecikar_sultra',
+	// 'database' => 'emoncikar',
 	'dbdriver' => 'mysqli',
 	'dbprefix' => '',
 	'pconnect' => FALSE,

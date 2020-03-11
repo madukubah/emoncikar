@@ -76,11 +76,13 @@ class Excel extends PHPExcel {
             'Volume',
             'Satuan',
             'Tipe Kegiatan',
-            'PAGU Anggaran',
-            'REALISASI Anggaran',
             'Tahun Anggaran',
             'Longitude',
             'Latitude',
+            'PAGU Anggaran',
+            'REALISASI Anggaran',
+            'Progress keuangan',
+            'Progress Fisik',
         ];
         foreach( $headers as $ind => $header ):
             //SET DIMENSI TABEL
@@ -113,20 +115,28 @@ class Excel extends PHPExcel {
             'quantity',
             'unit',
             'AuFnF',
-            'ceiling_budget',
-            'real_total',
             'year',
             'longitude',
             'latitude',
+            'ceiling_budget',
+            'real_total',
+            'financial_progress',
+            'physical_progress',
         ];
         $AuFnF_select = [
             "AU" => "[AU] Administrasi Umum",
             "F" => "[F] Fisik",
             "NF" => "[NF] Non Fisik",
           ];
+        $n = 0;
         foreach( $activities as $activity ):
             foreach( $headers as $ind => $header ):
                 
+                if( $header == 'physical_progress' || $header == 'financial_progress' ) 
+                {
+                    $activity->$header = number_format($activity->$header, 2) ;
+                    $activity->$header .= " % ";
+                }
                 $this->getActiveSheet()->setCellValue(( chr( 65+$ind ).$number ), ( $activity->$header ) );
                 if( $header == 'AuFnF' ) $this->getActiveSheet()->setCellValue(( chr( 65+$ind ).$number ), ( $AuFnF_select[ $activity->AuFnF ] ) );
 
@@ -137,8 +147,24 @@ class Excel extends PHPExcel {
                 if( $header == 'ceiling_budget' || $header == 'real_total' ) 
                     $this->getActiveSheet()->getStyle( ( chr( 65+$ind ).$number ) )->getNumberFormat()->setFormatCode( '_("Rp "* #,##0.00_);_("$"* \(#,##0.00\);_("$"* "-"??_);_(@_)' );
 
+                if( $n == count( $activities ) - 1 )
+                {
+                    $this->getActiveSheet()->getStyle(( chr( 65+$ind ).$number ))->applyFromArray(
+                        array(
+                            'fill' => array(
+                                'type' => PHPExcel_Style_Fill::FILL_SOLID,
+                                'color' => array('rgb' => '9ba683')
+                            )
+                        )
+                    );
+                    $this->getActiveSheet()->getStyle( ( chr( 65+$ind ).$number ) )->getFont()->setBold(true);
+
+                }
+                    
             endforeach;
+            
             $number++;
+            $n++;
         endforeach;
 
 		ob_end_clean();

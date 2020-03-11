@@ -89,6 +89,18 @@ class Report extends Uadmin_Controller {
 		// echo 'aaaaa';die;
 
 		$activities = $this->activity_model->activities( 0, NULL, $nomenclature_id, $year  )->result();
+		$sum = $this->activity_model->sum( 0, NULL, $nomenclature_id, $year )->row();
+		$sum->code = '';
+		$sum->name = 'Total';
+		$sum->title = '';
+		$sum->location = '';
+		$sum->unit = '';
+		$sum->AuFnF = '';
+		$sum->AUpLkS = '';
+		if( $sum->total != 0 )
+			$sum->financial_progress = ( $sum->real_total ) / $sum->total * 100;
+		
+		$activities []= $sum ;
 		// var_dump( $activities );die;
 		$excel->generate( $activities );
 		
