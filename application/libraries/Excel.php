@@ -118,7 +118,7 @@ class Excel extends PHPExcel {
             'year',
             'longitude',
             'latitude',
-            'ceiling_budget',
+            'total',
             'real_total',
             'financial_progress',
             'physical_progress',
@@ -144,7 +144,7 @@ class Excel extends PHPExcel {
                 $this->getActiveSheet()->getStyle(( chr( 65+$ind ).$number ))->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
                 $this->getActiveSheet()->getStyle( ( chr( 65+$ind ).$number ))->getFont()->setSize(11);
                 $this->getActiveSheet()->getStyle(( chr( 65+$ind ).$number ))->getAlignment()->setWrapText(true);
-                if( $header == 'ceiling_budget' || $header == 'real_total' ) 
+                if( $header == 'total' || $header == 'real_total' ) 
                     $this->getActiveSheet()->getStyle( ( chr( 65+$ind ).$number ) )->getNumberFormat()->setFormatCode( '_("Rp "* #,##0.00_);_("$"* \(#,##0.00\);_("$"* "-"??_);_(@_)' );
 
                 if( $n == count( $activities ) - 1 )
