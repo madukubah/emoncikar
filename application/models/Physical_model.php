@@ -349,13 +349,15 @@ class Physical_model extends MY_Model
    */
 
   public function planning_physicals( $start = 0 , $limit = NULL, $nomenclature_id = NULL, $year = NULL, $pptk_id = NULL )
-
   {
-
       $this->db->group_by( 'activity.id');
-
       return $this->sum( $start , $limit, $nomenclature_id , $year , $pptk_id );
+  }
 
+  public function realization_physicals( $start = 0 , $limit = NULL, $nomenclature_id = NULL, $year = NULL, $pptk_id = NULL )
+  {
+      $this->db->group_by( 'activity.id');
+      return $this->sum( $start , $limit, $nomenclature_id , $year , $pptk_id, $status = 1 );
   }
 
 

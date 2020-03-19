@@ -1,3 +1,20 @@
+<?php
+    for( $i = count( $data_sets[1]->values ) -1 ; $i >=1 ; $i-- )
+    {
+      if( $data_sets[1]->values[$i] == $data_sets[1]->values[$i - 1] )
+        unset( $data_sets[1]->values[$i] );
+      else break;
+    }
+    unset( $data_sets[1]->values[ count( $data_sets[1]->values ) -1 ] );
+
+    for( $i = count( $data_sets[0]->values ) -1 ; $i >=1 ; $i-- )
+    {
+      if( $data_sets[0]->values[$i] == $data_sets[0]->values[$i - 1] )
+        unset( $data_sets[0]->values[$i] );
+      else break;
+    }
+    unset( $data_sets[0]->values[ count( $data_sets[0]->values ) -1 ] );
+?>
 <div class="card p-2" style="background-color : rgba(255, 255, 255, 0.6) !important">
     <h5 class="justify-content-center text-center" ><?= $title?></h5>
     <div class="chart">
@@ -6,7 +23,7 @@
     </div>
     <br>
     <div class="table-responsive" >
-        <table class="table table-striped table-bordered table-hover" >
+        <table style="font-size:12px" class="table table-striped table-bordered table-hover" >
             <tr>
                 <td></td>
                 <?php
@@ -33,7 +50,7 @@
                     endforeach;
                 ?>
             </tr>
-            <tr>
+            <tr style="color: green" >
                 <td>
                     <?= $data_sets[1]->title  ?>
                 </td>
@@ -42,6 +59,20 @@
                 ?>
                     <td>
                         <?= number_format( $value )?>
+                    </td>
+                <?php
+                    endforeach;
+                ?>
+            </tr>
+            <tr>
+                <td>
+                    Deviasi
+                </td>
+                <?php
+                    foreach( $data_sets[1]->table as $ind => $value ):
+                ?>
+                    <td>
+                        <?= number_format( abs( $value - $data_sets[0]->table[ $ind ] ) )?>
                     </td>
                 <?php
                     endforeach;

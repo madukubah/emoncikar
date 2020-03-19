@@ -30,6 +30,8 @@
                     
                 );
                 $form['readonly'] = '';
+                $form['disabled'] = '';
+
 
                 switch(  $attr['type'] )
                 {

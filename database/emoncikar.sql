@@ -39,12 +39,17 @@ CREATE TABLE `activity` (
   `latitude` varchar(100) NOT NULL,
   `longitude` varchar(100) NOT NULL,
   `images` text NOT NULL,
+  `no_contract` varchar(200) NOT NULL,
+  `company_name` varchar(200) NOT NULL,
+  `duration` varchar(200) NOT NULL,
+  `no_news` varchar(200) NOT NULL,
+  `status` varchar(200) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `nomenclature_id` (`nomenclature_id`),
   KEY `pptk_id` (`pptk_id`),
   CONSTRAINT `activity_ibfk_1` FOREIGN KEY (`nomenclature_id`) REFERENCES `nomenclature` (`id`),
   CONSTRAINT `activity_ibfk_2` FOREIGN KEY (`pptk_id`) REFERENCES `pptk` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -53,7 +58,7 @@ CREATE TABLE `activity` (
 
 LOCK TABLES `activity` WRITE;
 /*!40000 ALTER TABLE `activity` DISABLE KEYS */;
-INSERT INTO `activity` VALUES (4,6,'F','AU','Perluasan SPAM IKK ANGGOEYA','KOTA KENDARI',40,'SR',6000000,6000000,0,2020,5,'','','default.jpg;default.jpg;default.jpg;default.jpg;default.jpg'),(5,3,'F','AU','Pengembangan Kawasan Perdesaan Kec. Towea','Muna',1,'Ha',1000000,1000000,0,2021,5,'','','default.jpg;default.jpg;default.jpg;default.jpg;default.jpg'),(6,3,'F','AU','Pembangunan PSD Kawasan Kumuh Pesisir','Bau-bau',1,'Ha',1000000,1000000,0,2021,5,'','','default.jpg;default.jpg;default.jpg;default.jpg;default.jpg');
+INSERT INTO `activity` VALUES (7,6,'F','AU','Pembangunan Broncaptering Kap. 1 L/det SPAM Pulau Hoga mendukung Kawasan Khusus Wisata Pulau Hoga, Kab. Wakatobi','Wakatobi',50,'L/d',5000000,5000000,0,2020,5,'0','0','default.jpg;default.jpg;default.jpg;default.jpg;default.jpg','','','','',''),(8,3,'F','AU','Peningkatan kualitas Perumahan Kumuh dan permukiman kumuh','KOTA KENDARI',38,'Hektar',40000000,40000000,0,2020,5,'0','0','default.jpg;default.jpg;default.jpg;default.jpg;default.jpg','','','','',''),(9,3,'F','AU','atan Kualitas Permukiman Kumuh Kawasan Pongo Kec. Wangi-wangi Selatan Kab. Wakatobi',' WAKATOBI',19.32,'Hektar',10000000,10000000,0,2020,6,'0','0','default.jpg;default.jpg;default.jpg;default.jpg;default.jpg','','','','','Selesai'),(10,3,'F','AU','Peningkatan Kualitas Permukiman Kumuh Kawasan Laiworu Kec. Batalaiworu Kabupaten Muna','MUNA ',27.88,'Hektar',31000000,31000000,0,2020,5,'0','0','default.jpg;default.jpg;default.jpg;default.jpg;default.jpg','','','','',''),(11,6,'F','AU','Pembangunan Broncaptering Kap. 1 L/det SPAM Pulau Hoga mendukung Kawasan Khusus Wisata Pulau Hoga, Kab. Wakatobi','WAKATOBI ',1,'Liter/detik',7000000,7000000,0,2020,7,'0','0','default.jpg;default.jpg;default.jpg;default.jpg;default.jpg','','','','',''),(12,6,'F','AU','Pembangunan IKK Kecamatan Lambai','KOLAKA UTARA',20,'Liter/detik',15635000,15635000,0,2020,6,'0','0','default.jpg;default.jpg;default.jpg;default.jpg;default.jpg','','','','',''),(13,6,'F','AU','Pembangunan SPAM Ibu Kota Kabupaten Buton Tengah 55 l/s','BUTON TENGAH',55,'Liter/detik',30000000,30000000,0,2020,5,'0','0','default.jpg;default.jpg;default.jpg;default.jpg;default.jpg','','','','',''),(14,6,'F','AU','Pembangunan SPAM IKK Matausu',' BOMBANA ',5,'Liter/detik',10051422,10051422,0,2020,5,'0','0','default.jpg;default.jpg;default.jpg;default.jpg;default.jpg','','','','',''),(15,5,'AU','AU','Ranperda Penyehatan Lingkungan Permukiman Kab. Buton Selatan','BUTON SELATAN',1,'KAB/KOTA',500000,500000,0,2020,6,'0','0','default.jpg;default.jpg;default.jpg;default.jpg;default.jpg','','','','',''),(16,5,'F','AU','Pembangunan PS Air Limbah Skala Kawasan Permukiman Tradisional','KOTA BAUBAU ',1000,'KK',5000000,5000000,0,2020,7,'0','0','default.jpg;default.jpg;default.jpg;default.jpg;default.jpg','','','','',''),(17,4,'F','AU','Penataan Kawasan Permukiman Budaya Kampung Liya, Tomia Timur, Lamanggu, Kawasan Wali,Popalia, Taipabu','WAKATOBI',42,'M2',72500000,72500000,0,2020,6,'0','0','default.jpg;default.jpg;default.jpg;default.jpg;default.jpg','','','','',''),(18,6,'F','AU','pembangunan jaringan perpipaan PAM Kota Kendari','Kota Kendari',4000,'SR',22500000,22500000,0,2020,5,'0','0','default.jpg;default.jpg;default.jpg;default.jpg;default.jpg','','','','',''),(19,3,'F','AU','Administrasi Umum Satker PLP','KOTA KENDARI',4,'KAB/KOTA',200000,200000,0,2020,5,'0','0','default.jpg;default.jpg;default.jpg;default.jpg;default.jpg','a102 199','technoindo','11 bulan','technoindo','Lelang');
 /*!40000 ALTER TABLE `activity` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -75,7 +80,7 @@ CREATE TABLE `budget` (
   PRIMARY KEY (`id`),
   KEY `activity_id` (`activity_id`),
   CONSTRAINT `budget_ibfk_1` FOREIGN KEY (`activity_id`) REFERENCES `activity` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=90 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -84,7 +89,7 @@ CREATE TABLE `budget` (
 
 LOCK TABLES `budget` WRITE;
 /*!40000 ALTER TABLE `budget` DISABLE KEYS */;
-INSERT INTO `budget` VALUES (12,4,2000000,2,2020,0,0),(13,4,2000000,3,2020,0,0),(14,4,2000000,4,2020,0,0),(15,4,1900000,2,2020,0,1),(16,5,300000,2,2021,0,0),(17,5,200000,3,2021,0,0),(18,5,450000,4,2021,0,0),(19,5,50000,5,2021,0,0),(24,6,300000,2,2021,0,0),(25,6,500000,4,2021,0,0),(26,6,150000,11,2021,0,0),(27,6,50000,12,2021,0,0);
+INSERT INTO `budget` VALUES (28,7,1000000,2,2020,0,0),(29,7,3000000,4,2020,0,0),(30,7,1000000,6,2020,0,0),(31,7,1500000,2,2020,0,1),(32,8,10000000,2,2020,0,0),(33,8,10000000,3,2020,0,0),(34,8,10000000,5,2020,0,0),(35,8,10000000,6,2020,0,0),(41,10,3000000,3,2020,0,0),(42,10,3000000,4,2020,0,0),(43,10,3000000,5,2020,0,0),(44,10,20000000,6,2020,0,0),(45,10,2000000,7,2020,0,0),(46,11,3000000,2,2020,0,0),(47,11,3000000,3,2020,0,0),(48,11,1000000,4,2020,0,0),(49,12,635000,3,2020,0,0),(50,12,5000000,4,2020,0,0),(51,12,5000000,5,2020,0,0),(52,12,5000000,6,2020,0,0),(53,13,10000000,3,2020,0,0),(54,13,10000000,4,2020,0,0),(55,13,10000000,5,2020,0,0),(56,14,51422,3,2020,0,0),(57,14,4000000,4,2020,0,0),(58,14,4000000,5,2020,0,0),(59,14,2000000,6,2020,0,0),(60,15,200000,3,2020,0,0),(61,15,300000,4,2020,0,0),(62,16,1000000,3,2020,0,0),(63,16,2000000,4,2020,0,0),(64,16,2000000,5,2020,0,0),(65,17,2500000,3,2020,0,0),(66,17,30000000,4,2020,0,0),(67,17,30000000,5,2020,0,0),(68,17,10000000,6,2020,0,0),(69,18,500000,3,2020,0,0),(70,18,2000000,4,2020,0,0),(71,18,20000000,5,2020,0,0),(72,8,10000000,2,2020,0,1),(84,9,2000000,3,2020,0,0),(85,9,2000000,4,2020,0,0),(86,9,2000000,5,2020,0,0),(87,9,2000000,6,2020,0,0),(88,9,2000000,7,2020,0,0),(89,19,200000,2,2020,0,0);
 /*!40000 ALTER TABLE `budget` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -211,7 +216,7 @@ CREATE TABLE `physical` (
   PRIMARY KEY (`id`),
   KEY `activity_id` (`activity_id`),
   CONSTRAINT `physical_ibfk_1` FOREIGN KEY (`activity_id`) REFERENCES `activity` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=85 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -220,7 +225,7 @@ CREATE TABLE `physical` (
 
 LOCK TABLES `physical` WRITE;
 /*!40000 ALTER TABLE `physical` DISABLE KEYS */;
-INSERT INTO `physical` VALUES (10,4,30,2,2020,0),(11,4,50,3,2020,0),(12,4,20,4,2020,0),(13,4,15,2,2020,1),(14,5,30,2,2021,0),(15,5,50,3,2021,0),(16,5,20,4,2021,0),(20,6,30,2,2021,0),(21,6,50,4,2021,0),(22,6,20,11,2021,0);
+INSERT INTO `physical` VALUES (23,7,30,2,2020,0),(24,7,40,4,2020,0),(25,7,30,6,2020,0),(26,7,30,2,2020,1),(27,8,20,2,2020,0),(28,8,30,3,2020,0),(29,8,30,5,2020,0),(30,8,20,6,2020,0),(36,10,30,3,2020,0),(37,10,20,4,2020,0),(38,10,20,5,2020,0),(39,10,20,6,2020,0),(40,10,10,7,2020,0),(41,11,40,2,2020,0),(42,11,40,3,2020,0),(43,11,20,4,2020,0),(44,12,20,3,2020,0),(45,12,40,4,2020,0),(46,12,30,5,2020,0),(47,12,10,6,2020,0),(48,13,40,3,2020,0),(49,13,30,4,2020,0),(50,13,30,5,2020,0),(51,14,30,3,2020,0),(52,14,40,4,2020,0),(53,14,20,5,2020,0),(54,14,10,6,2020,0),(55,15,40,3,2020,0),(56,15,60,4,2020,0),(57,16,30,3,2020,0),(58,16,20,4,2020,0),(59,16,50,5,2020,0),(60,17,20,3,2020,0),(61,17,30,4,2020,0),(62,17,30,5,2020,0),(63,17,20,6,2020,0),(64,18,30,3,2020,0),(65,18,40,4,2020,0),(66,18,30,5,2020,0),(67,8,30,2,2020,1),(79,9,20,3,2020,0),(80,9,20,4,2020,0),(81,9,20,5,2020,0),(82,9,20,6,2020,0),(83,9,20,7,2020,0),(84,19,100,2,2020,0);
 /*!40000 ALTER TABLE `physical` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -236,7 +241,7 @@ CREATE TABLE `pptk` (
   `name` varchar(100) NOT NULL,
   `description` text NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -245,7 +250,7 @@ CREATE TABLE `pptk` (
 
 LOCK TABLES `pptk` WRITE;
 /*!40000 ALTER TABLE `pptk` DISABLE KEYS */;
-INSERT INTO `pptk` VALUES (5,'Oksy Lepong Bulan, S.Ars','Randal Cipta Karya');
+INSERT INTO `pptk` VALUES (5,'Oksy Lepong Bulan, S.Ars','Randal Cipta Karya'),(6,'Eka Firmansyah T., ST, M. Eng','-'),(7,'Eulisa, ST','-');
 /*!40000 ALTER TABLE `pptk` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -323,7 +328,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'127.0.0.1','admin@fixl.com','$2y$12$XpBgMvQ5JzfvN3PTgf/tA.XwxbCOs3mO0a10oP9/11qi1NUpv46.u','admin@fixl.com',NULL,'',NULL,NULL,NULL,NULL,NULL,1268889823,1579600224,1,'Admin','istrator','081342989185','USER_1_1578564541.png','admin'),(13,'::1','admin@admin.com','$2y$10$L5hzKcil32fXqus1bnBuNuxLrWq/6cOU8q1o0E2ahM6iddz4Wio06','admin@admin.com',NULL,NULL,NULL,NULL,NULL,NULL,NULL,1568678256,1580649061,1,'admin','emoncikar','00','USER_13_1578989096.png','jln mutiara no 8'),(16,'182.1.161.232','dinaspu@gmail.com','$2y$10$/c33Qt8mOh96DVZF0vuZvOkawyKMz7ZjvX2KS1GFh8cZd4h6jT3vG','dinaspu@gmail.com',NULL,NULL,NULL,NULL,NULL,NULL,NULL,1579600546,1580393051,1,'alan','.','12','default.jpg','alamat');
+INSERT INTO `users` VALUES (1,'127.0.0.1','admin@fixl.com','$2y$12$XpBgMvQ5JzfvN3PTgf/tA.XwxbCOs3mO0a10oP9/11qi1NUpv46.u','admin@fixl.com',NULL,'',NULL,NULL,NULL,NULL,NULL,1268889823,1579600224,1,'Admin','istrator','081342989185','USER_1_1578564541.png','admin'),(13,'::1','admin@admin.com','$2y$10$L5hzKcil32fXqus1bnBuNuxLrWq/6cOU8q1o0E2ahM6iddz4Wio06','admin@admin.com',NULL,NULL,NULL,NULL,NULL,NULL,NULL,1568678256,1584614949,1,'ADMIN','ECIKAR','081144556677','USER_13_1581350650.png','jln mutiara no 8'),(16,'182.1.161.232','dinaspu@gmail.com','$2y$10$2JSpBKh5W1m6a7R1qx3E3Oq5uX3N2kSLXjOU1PR/CmR1JRcMzlE4G','dinaspu@gmail.com',NULL,NULL,NULL,NULL,NULL,NULL,NULL,1579600546,1584622455,1,'user','.','12','default.jpg','alamat');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -366,4 +371,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-02-10 15:18:45
+-- Dump completed on 2020-03-19 21:00:21
