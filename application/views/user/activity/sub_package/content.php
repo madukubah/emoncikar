@@ -38,13 +38,13 @@
                   </a>
                 </li>
                 <li class="col text-center nav-item">
-                  <a class="nav-link <?= ( $code== "budget_planning")? "active": "" ?>" href="<?= $tab_url?>?code=budget_planning" >
-                    Rencana Keuangan
+                  <a class="nav-link <?= ( $code== "planning")? "active": "" ?>" href="<?= $tab_url?>?code=planning" >
+                    Rencana
                   </a>
                 </li>
                 <li class="col text-center nav-item">
-                  <a class="nav-link <?= ( $code== "physical_planning")? "active": "" ?>" href="<?= $tab_url?>?code=physical_planning" >
-                    Rencana Fisik
+                  <a class="nav-link <?= ( $code== "realization")? "active": "" ?>" href="<?= $tab_url?>?code=realization" >
+                    Realisasi
                   </a>
                 </li>
                 <li class="col text-center nav-item">

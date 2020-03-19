@@ -249,61 +249,33 @@ class Activity_model extends MY_Model
    */
 
   public function _fetch_data( $start = 0 , $limit = NULL, $nomenclature_id = NULL, $year = NULL, $pptk_id = NULL )
-
   {
-
       if (isset( $limit ))
-
       {
-
         $this->limit( $limit );
-
       }
-
       $this->offset( $start );
-
       $this->select( $this->table.'.*' );
-
       $this->select( 'nomenclature.id as nomenclature_id' );
-
       $this->select( 'nomenclature.code as code' );
 
-
-
       $this->join(
-
         "nomenclature",
-
         "nomenclature.id = " . $this->table . ".nomenclature_id",
-
         "inner"
-
       );
 
-
-
       if ( isset( $year ) )
-
           $this->where( 'activity.year', $year);
-
       if ( isset( $nomenclature_id ) )
-
           $this->where( 'nomenclature_id', $nomenclature_id);
-
       if ( isset( $pptk_id ) )
-
           $this->where( 'pptk_id', $pptk_id);
-
-          
-
+     
       $this->order_by($this->table.'.id', 'asc');
-
       return $this->fetch_data();
-
   }
-
   
-
   /**
 
    * activity
@@ -343,135 +315,70 @@ class Activity_model extends MY_Model
    */
 
   public function sum( $start = 0 , $limit = NULL, $nomenclature_id = NULL, $year = NULL, $pptk_id = NULL )
-
   {
-
       // $year || $year = date('Y');
-
       $this->db->select([
-
         "nomenclature.id as nomenclature_id",
-
         "nomenclature.code",
-
         "nomenclature.name",
-
         "activity.*",
-
         "SUM( quantity ) as quantity",
-
         "SUM( activity.ceiling_rpm + activity.ceiling_pln ) as total",
-
         "SUM( ceiling_rpm ) as ceiling_rpm",
-
         "SUM( ceiling_pln ) as ceiling_pln",
-
         "SUM( real_rpm + real_pln ) as real_total",
-
         "SUM( real_rpm ) as real_rpm",
-
         "SUM( real_pln ) as real_pln",
-
         "( ( real_rpm + real_pln )/ total * 100 ) as financial_progress",
-
         // "SUM( 100 ) as physical_total",
-
         " ( activity.physical_progress / SUM( 100 ) * 100 )   as physical_progress",
-
         "0 as ceiling_block",
-
-        "0 as description",
-
+        "activity.status",
       ]);
-
       
-
-      $this->db->from( 
-
+     $this->db->from( 
         '
-
               ( 
-
                 SELECT 
-
                     activity.*,
-
                     ( activity.ceiling_rpm + activity.ceiling_pln ) as total,
-
                     SUM( CASE WHEN budget.status = 1 AND budget.rpm_pln = 0 THEN  budget.nominal ELSE 0 end  ) as real_rpm,
-
                     SUM( CASE WHEN budget.status = 1 AND budget.rpm_pln = 1 THEN  budget.nominal ELSE 0 end  ) as real_pln
-
                   From 
-
                     (
-
                     	SELECT
-
                             activity.*,
-
                         	  SUM( CASE WHEN physical.status = 1 THEN  physical.progress ELSE 0 end  ) as physical_progress
-
                          From 
-
                             activity
-
                         INNER JOIN
-
                             physical
-
                         on 
-
                             physical.activity_id = activity.id
-
                         GROUP BY activity.id 
 
-
-
                     )
-
                     activity
-
                   INNER JOIN
-
                       budget
-
                   on 
-
                       budget.activity_id = activity.id
-
                   
-
                   GROUP BY budget.activity_id 
-
               ) activity
-
         '
-
        );
-
       $this->db->join( "nomenclature","on nomenclature.id = activity.nomenclature_id", "inner" );
 
-
-
       if ( isset( $year ) )
-
           $this->db->where( $this->table.'.year', $year);
-
       if ( isset( $nomenclature_id ) )
-
           $this->db->where( 'nomenclature_id', $nomenclature_id);
-
       if ( isset( $pptk_id ) )
-
           $this->db->where( 'pptk_id', $pptk_id);
-
       
-
       return $this->db->get(  );
-
   }
-
 
 
 }

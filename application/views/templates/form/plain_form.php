@@ -29,7 +29,11 @@
                 'class' => 'form-control',  
                 
             );
-            if( isset( $attr['readonly'] ) )  $form['readonly'] = '';
+            if( isset( $attr['readonly'] ) )
+            {
+                $form['readonly'] = '';
+                $form['disabled'] = '';
+            }  
 
             switch(  $attr['type'] )
             {

@@ -186,7 +186,7 @@ class Activity extends Uadmin_Controller {
 		{
 			case "recap" :
 				// die;
-				$this->session->set_flashdata('last_url', site_url('uadmin/activity/nomenclature/').$nomenclature_id  );
+				// $this->session->set_flashdata('last_url', site_url('uadmin/activity/nomenclature/').$nomenclature_id  );
 
 				$table = $this->services->get_sub_package_table_config( $this->current_page );
 				$table[ "rows" ] = $this->activity_model->activities( 0, NULL, $nomenclature_id, $year , $pptk_id )->result();
@@ -318,7 +318,7 @@ class Activity extends Uadmin_Controller {
 				$chart2 = $this->load->view('user/activity/sub_package/line', $chart2, true);
 
 				$activities = $this->activity_model->_fetch_data( 0, NULL, $nomenclature_id, $year , $pptk_id )->result();
-				$activity_select [ -1 ] = " ";
+				$activity_select [ -1 ] = " Semua Kegiatan  ";
 				$activity_id || $activity_id = -1;
 				foreach( $activities as $activity )
 				{
@@ -347,7 +347,7 @@ class Activity extends Uadmin_Controller {
 				// $this->data[ "contents" ] = $form_filter.$chart1."<br>".$chart2;
 				$this->data[ "contents" ] = $form_filter.$activity_form.$chart1."<br>".$chart2;
 			break;
-			case "budget_planning" :
+			case "planning" :
 				$table = $this->services->get_planning_table_config( $this->current_page );
 				$table[ "rows" ] =  $this->budget_model->planning_budgets( 0, NULL, $nomenclature_id, $year , $pptk_id )->result();
 				$table[ "month_header" ] = "Rencana Keuangan (Rp Ribu)";
@@ -359,9 +359,8 @@ class Activity extends Uadmin_Controller {
 				$sum = $this->services->get_planning_bold( $sum );
 				$table[ "rows" ] []= $sum;
 				$table = $this->load->view('user/activity/sub_package/planning_table', $table, true);
-				$this->data[ "contents" ] = $form_filter.$table;
-			break;
-			case "physical_planning" :
+				$this->data[ "contents" ] = $form_filter."<br><h4>Keuangan</h4>".$table;
+
 				$table = $this->services->get_planning_table_config( $this->current_page );
 				$table[ "rows" ] =  $this->physical_model->planning_physicals( 0, NULL, $nomenclature_id, $year , $pptk_id )->result();
 				$table[ "month_header" ] = "Rencana Fisik";
@@ -378,7 +377,41 @@ class Activity extends Uadmin_Controller {
 				$sum = $this->services->get_planning_bold( $sum );
 				$table[ "rows" ] []= $sum;
 				$table = $this->load->view('user/activity/sub_package/planning_table', $table, true);
-				$this->data[ "contents" ] = $form_filter.$table;
+				$this->data[ "contents" ] .= "<br><h4>Fisik</h4>".$table;
+
+			break;
+			case "realization" :
+				$table = $this->services->get_planning_table_config( $this->current_page );
+				$table[ "rows" ] =  $this->budget_model->realization_budgets( 0, NULL, $nomenclature_id, $year , $pptk_id )->result();
+				$table[ "month_header" ] = "Rencana Keuangan (Rp Ribu)";
+				$sum = $this->budget_model->sum( 0, NULL, $nomenclature_id, $year , $pptk_id, $status = 1 )->row();
+				$sum->code = '';
+				$sum->title = 'Total';
+				$sum->AuFnF = '';
+				$sum->AUpLkS = '';
+				$sum = $this->services->get_planning_bold( $sum );
+				$table[ "rows" ] []= $sum;
+				$table = $this->load->view('user/activity/sub_package/planning_table', $table, true);
+				$this->data[ "contents" ] = $form_filter."<br><h4>Keuangan</h4>".$table;
+
+				$table = $this->services->get_planning_table_config( $this->current_page );
+				$table[ "rows" ] =  $this->physical_model->realization_physicals( 0, NULL, $nomenclature_id, $year , $pptk_id )->result();
+				$table[ "month_header" ] = "Rencana Fisik";
+				$sum = $this->physical_model->sum( 0, NULL, $nomenclature_id, $year , $pptk_id, $status = 1 )->row();
+				$sum->code = '';
+				$sum->title = 'Progress';
+				$sum->AuFnF = '';
+				$sum->AUpLkS = '';
+				foreach( $table[ "rows" ] as $row )
+				{
+					$row = $this->services->get_physical_prefix_sum( $row );	
+				}
+				$sum = $this->services->get_physical_prefix_sum( $sum );
+				$sum = $this->services->get_planning_bold( $sum );
+				$table[ "rows" ] []= $sum;
+				$table = $this->load->view('user/activity/sub_package/planning_table', $table, true);
+				$this->data[ "contents" ] .= "<br><h4>Fisik</h4>".$table;
+				
 			break;
 			case "galleries" :
 				$table = $this->services->get_photo_table_config( $this->current_page );
@@ -435,7 +468,13 @@ class Activity extends Uadmin_Controller {
 			$data['latitude'] 			= $this->input->post( 'latitude' );
 			$data['longitude'] 			= $this->input->post( 'longitude' );
 			$data['images'] 			= "default.jpg;default.jpg;default.jpg;default.jpg;default.jpg";
+			$data['no_contract'] 		= $this->input->post( 'no_contract' );
+			$data['company_name'] 		= $this->input->post( 'company_name' );
+			$data['no_news'] 			= $this->input->post( 'no_news' );
+			$data['duration'] 			= $this->input->post( 'duration' );
+			$data['status'] 			= $this->input->post( 'status' );
 			
+			// var_dump($data);die;
 			if(  $activity_id = $this->activity_model->create( $data ) )
 			{
 				$budget_arr = array();
@@ -515,7 +554,10 @@ class Activity extends Uadmin_Controller {
 			$form_data_3 = $this->services->get_form_data()[3];
             $form_data_3 = $this->load->view('templates/form/plain_form_6', $form_data_3 , TRUE ) ;
 
-			$this->data[ "contents" ] =  $form_data.$form_data_1.$form_data_3;;
+			$form_data_4 = $this->services->get_form_data()[4];
+			$form_data_4 = $this->load->view('templates/form/plain_form', $form_data_4 , TRUE ) ;
+
+			$this->data[ "contents" ] =  $form_data.$form_data_1.$form_data_3.$form_data_4;
 			// $this->data[ "contents" ] .=  $form_data_3.$form_data_1;
 			
 			$table = $this->services->get_planning_table_config( $this->current_page );
@@ -622,8 +664,12 @@ class Activity extends Uadmin_Controller {
 		
 		$form_data_3 = $form[3];
 		$form_data_3 = $this->load->view('templates/form/plain_form_readonly_6', $form_data_3 , TRUE ) ;
+
+		$form_data_4 = $this->services->get_form_data()[4];
+		$form_data_4 = $this->load->view('templates/form/plain_form_readonly', $form_data_4 , TRUE ) ;
+
 		$this->data[ "contents" ] =  $form_data;
-		$this->data[ "contents" ] .=  $form_data_1.$form_data_3;
+		$this->data[ "contents" ] .=  $form_data_1.$form_data_3.$form_data_4;
 
 		$this->data[ "planning" ] = "";
 		$this->data[ "physical" ] = "";
@@ -811,7 +857,7 @@ class Activity extends Uadmin_Controller {
         if ($this->form_validation->run() === TRUE  )
         {
 			$data['title'] 				= $this->input->post( 'title' );
-			$data['nomenclature_id'] 	= $this->input->post( 'nomenclature_id' );
+			// $data['nomenclature_id'] 	= $this->input->post( 'nomenclature_id' );
 			$data['AuFnF'] 				= $this->input->post( 'AuFnF' );
 			$data['quantity'] 			= $this->input->post( 'quantity' );
 			$data['unit'] 				= $this->input->post( 'unit' );
@@ -820,9 +866,14 @@ class Activity extends Uadmin_Controller {
 			$data['ceiling_rpm'] 		= $data['ceiling_budget'] ;// $this->input->post( 'ceiling_rpm' );
 			$data['ceiling_pln'] 		= 0; //$this->input->post( 'ceiling_pln' );
 			$data['location'] 			= $this->input->post( 'location' );
-			$data['pptk_id'] 			= $this->input->post( 'pptk_id' );
+			// $data['pptk_id'] 			= $this->input->post( 'pptk_id' );
 			$data['latitude'] 			= $this->input->post( 'latitude' );
 			$data['longitude'] 			= $this->input->post( 'longitude' );
+			$data['no_contract'] 		= $this->input->post( 'no_contract' );
+			$data['company_name'] 		= $this->input->post( 'company_name' );
+			$data['no_news'] 			= $this->input->post( 'no_news' );
+			$data['duration'] 			= $this->input->post( 'duration' );
+			$data['status'] 			= $this->input->post( 'status' );
 			##############################################
 			# PLANNING VALIDATION
 			##############################################
@@ -915,8 +966,12 @@ class Activity extends Uadmin_Controller {
 			
 			$form_data_3 = $form[3];
 			$form_data_3 = $this->load->view('templates/form/plain_form_6', $form_data_3 , TRUE ) ;
+
+			$form_data_4 = $this->services->get_form_data()[4];
+			$form_data_4 = $this->load->view('templates/form/plain_form', $form_data_4 , TRUE ) ;
+
 			$this->data[ "contents" ] =  $form_data;
-			$this->data[ "contents" ] .=  $form_data_1.$form_data_3;
+			$this->data[ "contents" ] .= $form_data_1.$form_data_3.$form_data_4;
 			
 			$table = $this->services->get_planning_table_config( $this->current_page );
 			$budget_plan = $this->budget_model->budget_by_activity_id( $activity_id,  0, $activity->year )->row();

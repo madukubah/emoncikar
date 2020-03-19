@@ -14,24 +14,30 @@ class Activity_services
   protected $AuFnF;
   protected $latitude;
   protected $longitude;
+  protected $status;
   
   public $months = array( 'jan' ,'feb' ,'mar' ,'apr' ,'mei' ,'jun' ,'jul' ,'ags' ,'sep' ,'okt' ,'nov' ,'des');
 
   function __construct(){
-     $this->id = 0;
-     $this->title = "";//"Administrasi Umum Satker PLP";
-     $this->nomenclature_id = "";//3;
-     $this->quantity = "";//4;
-     $this->unit = "";//"KAB/KOTA";
-     $this->year = date('Y');
-     $this->ceiling_budget = "";//200000;
-     $this->ceiling_rpm = "";//0;
-     $this->ceiling_pln = "";//0;
-     $this->location = "";//"KOTA KENDARI";
-     $this->pptk_id = "";//1;
-     $this->AuFnF = "";//"F";
-     $this->latitude = "";//"0";
-     $this->longitude = "";//"0";
+      $this->id                 = 0;
+      $this->title              = "Administrasi Umum Satker PLP";
+      $this->nomenclature_id    = 3;
+      $this->quantity           = 4;
+      $this->unit               = "KAB/KOTA";
+      $this->year               = date('Y');
+      $this->ceiling_budget     = 200000;
+      $this->ceiling_rpm        = 0;
+      $this->ceiling_pln        = 0;
+      $this->location           = "KOTA KENDARI";
+      $this->pptk_id            = 1;
+      $this->AuFnF              = "F";
+      $this->latitude           = "0";
+      $this->longitude          = "0";
+      $this->no_contract        = 'a102 199';
+      $this->company_name       = 'technoindo';
+      $this->no_news            = '12/333/2020';
+      $this->duration           = '11 bulan';
+      $this->status             = 'Tender';
   }
 
   public function __get($var)
@@ -120,7 +126,7 @@ class Activity_services
         'physical_progress' => 'Progress Fisik',
 
         // 'ceiling_block' => 'Pagu Blokir',
-        'description' => 'Keterangan',
+        'status' => 'Keterangan',
       );
       $table["number"] = $start_number;
     return $table;
@@ -188,6 +194,13 @@ class Activity_services
         $data->{ $months[ $i ] } += $a;
       }
 
+      for( $i = count( $months ) -1 ; $i >=1 ; $i-- )
+      {
+        if( $data->{ $months[ $i ] } == $data->{ $months[ $i-1 ] } )
+          $data->{ $months[ $i ] } = 0;
+        else break;
+      }
+
     return $data;
   }
   public function get_budget_physical_row( $rpm, $pln, $physical )
@@ -215,7 +228,7 @@ class Activity_services
       $data->title = "<b>".$data->title."</b>";
       $data->location = "<b>".$data->location."</b>";
       $data->unit = "<b>".$data->unit."</b>";
-      $data->description = "<b>".$data->description."</b>";
+      $data->status = "<b>".$data->status."</b>";
 
       $data->AuFnF = "<b>".$data->AuFnF."</b>";
       $data->AUpLkS = "<b>".$data->AUpLkS."</b>";
@@ -453,6 +466,13 @@ class Activity_services
           $this->latitude         = $activity->latitude;
           $this->longitude        = $activity->longitude;
           $this->AuFnF            = $activity->AuFnF;
+          $this->no_contract      = $activity->no_contract;
+          $this->company_name     = $activity->company_name;
+          $this->no_news          = $activity->company_name;
+          $this->duration         = $activity->duration;
+          $this->status           = $activity->status;
+
+
       }
       // echo var_dump( $activity ); die;
       $pptks = $this->pptk_model->pptks()->result();
@@ -565,6 +585,33 @@ class Activity_services
             'value' => $this->form_validation->set_value('longitude', $this->longitude),
           ),
       );
+      $_data[4]["form_data"] = array(
+        "no_contract" => array(
+          'type' => 'text',
+          'label' => "Nomor Kontrak",
+          'value' => $this->form_validation->set_value('no_contract', $this->no_contract),
+        ),
+        "company_name" => array(
+          'type' => 'text',
+          'label' => "Nama Perusahaan",
+          'value' => $this->form_validation->set_value('company_name', $this->company_name),
+        ),
+        "duration" => array(
+          'type' => 'text',
+          'label' => "Jangka Waktu Pelaksanaan ( Bulan )",
+          'value' => $this->form_validation->set_value('duration', $this->duration),
+        ),
+        "no_news" => array(
+          'type' => 'text',
+          'label' => "No Berita Acara",
+          'value' => $this->form_validation->set_value('no_news', $this->no_news),
+        ),
+        "status" => array(
+          'type' => 'text',
+          'label' => "Status / Keterangan",
+          'value' => $this->form_validation->set_value('status', $this->status),
+        ),
+    );
       return $_data;
   }
 }
