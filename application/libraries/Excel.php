@@ -80,6 +80,7 @@ class Excel extends PHPExcel {
             'Longitude',
             'Latitude',
             'PAGU Anggaran',
+            'Nilai Kontrak Anggaran',
             'REALISASI Anggaran',
             'Progress keuangan',
             'Progress Fisik',
@@ -119,6 +120,7 @@ class Excel extends PHPExcel {
             'longitude',
             'latitude',
             'total',
+            'pagu_',
             'real_total',
             'financial_progress',
             'physical_progress',
@@ -144,7 +146,7 @@ class Excel extends PHPExcel {
                 $this->getActiveSheet()->getStyle(( chr( 65+$ind ).$number ))->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
                 $this->getActiveSheet()->getStyle( ( chr( 65+$ind ).$number ))->getFont()->setSize(11);
                 $this->getActiveSheet()->getStyle(( chr( 65+$ind ).$number ))->getAlignment()->setWrapText(true);
-                if( $header == 'total' || $header == 'real_total' ) 
+                if( $header == 'total' || $header == 'real_total' || $header == 'pagu_' ) 
                     $this->getActiveSheet()->getStyle( ( chr( 65+$ind ).$number ) )->getNumberFormat()->setFormatCode( '_("Rp "* #,##0.00_);_("$"* \(#,##0.00\);_("$"* "-"??_);_(@_)' );
 
                 if( $n == count( $activities ) - 1 )

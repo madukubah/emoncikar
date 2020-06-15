@@ -19,25 +19,48 @@ class Activity_services
   public $months = array( 'jan' ,'feb' ,'mar' ,'apr' ,'mei' ,'jun' ,'jul' ,'ags' ,'sep' ,'okt' ,'nov' ,'des');
 
   function __construct(){
-      $this->id                 = 0;
-      $this->title              = "Administrasi Umum Satker PLP";
-      $this->nomenclature_id    = 3;
-      $this->quantity           = 4;
-      $this->unit               = "KAB/KOTA";
+      // $this->id                 = 0;
+      // $this->title              = "Administrasi Umum Satker PLP";
+      // $this->nomenclature_id    = 3;
+      // $this->quantity           = 4;
+      // $this->unit               = "KAB/KOTA";
+      // $this->year               = date('Y');
+      // $this->ceiling_budget     = 200000;
+      // $this->ceiling_rpm        = 0;
+      // $this->ceiling_pln        = 0;
+      // $this->location           = "KOTA KENDARI";
+      // $this->pptk_id            = 1;
+      // $this->AuFnF              = "F";
+      // $this->latitude           = "0";
+      // $this->longitude          = "0";
+      // $this->no_contract        = 'a102 199';
+      // $this->company_name       = 'technoindo';
+      // $this->no_news            = '12/333/2020';
+      // $this->duration           = '11 bulan';
+      // $this->status             = 'Tender';
+			// $this->date             	= date('m/d/Y');
+
+			$this->id                 = "";
+      $this->title              = "";
+      $this->nomenclature_id    = "";
+      $this->quantity           = "";
+      $this->unit               = "";
       $this->year               = date('Y');
-      $this->ceiling_budget     = 200000;
+      $this->ceiling_budget     = 0;
       $this->ceiling_rpm        = 0;
       $this->ceiling_pln        = 0;
-      $this->location           = "KOTA KENDARI";
+      $this->location           = "";
       $this->pptk_id            = 1;
-      $this->AuFnF              = "F";
+      $this->AuFnF              = "";
       $this->latitude           = "0";
       $this->longitude          = "0";
-      $this->no_contract        = 'a102 199';
-      $this->company_name       = 'technoindo';
-      $this->no_news            = '12/333/2020';
-      $this->duration           = '11 bulan';
-      $this->status             = 'Tender';
+      $this->no_contract        = '';
+      $this->company_name       = '';
+      $this->no_news            = '';
+      $this->duration           = '';
+      $this->status             = '';
+			$this->date             	= date('m/d/Y');
+			$this->pagu_             	= "";
   }
 
   public function __get($var)
@@ -228,7 +251,7 @@ class Activity_services
       $data->title = "<b>".$data->title."</b>";
       $data->location = "<b>".$data->location."</b>";
       $data->unit = "<b>".$data->unit."</b>";
-      $data->status = "<b>".$data->status."</b>";
+      $data->status = "<b>".""."</b>";
 
       $data->AuFnF = "<b>".$data->AuFnF."</b>";
       $data->AUpLkS = "<b>".$data->AUpLkS."</b>";
@@ -471,8 +494,9 @@ class Activity_services
           $this->no_news          = $activity->company_name;
           $this->duration         = $activity->duration;
           $this->status           = $activity->status;
-
-
+					$this->date             = date("m/d/Y", strtotime($activity->date));
+          $this->pagu_           = $activity->pagu_;
+					
       }
       // echo var_dump( $activity ); die;
       $pptks = $this->pptk_model->pptks()->result();
@@ -536,10 +560,15 @@ class Activity_services
 							2022 => "2022",
           ),
           'selected' => $this->form_validation->set_value('year', $this->year ),
+				),
+				"pagu_" => array(
+          'type' => 'number',
+          'label' => "Pagu Anggaran ( dalam ribuan Rp 1.000 )",
+          'value' => $this->form_validation->set_value('pagu_', $this->pagu_),
         ),
         "ceiling_budget" => array(
           'type' => 'number',
-          'label' => "APBD Provinsi ( dalam ribuan Rp 1.000 )",
+          'label' => "Nilai Kontrak ( dalam ribuan Rp 1.000 )",
           'value' => $this->form_validation->set_value('ceiling_budget', $this->ceiling_budget),
         ),
       
@@ -590,6 +619,26 @@ class Activity_services
           'type' => 'text',
           'label' => "Nomor Kontrak",
           'value' => $this->form_validation->set_value('no_contract', $this->no_contract),
+				),
+				// "adendum_1" => array(
+        //   'type' => 'text',
+        //   'label' => "Adendum 1",
+        //   'value' => $this->form_validation->set_value('no_contract', $this->no_contract),
+				// ),
+				// "adendum_2" => array(
+        //   'type' => 'text',
+        //   'label' => "Adendum 2",
+        //   'value' => $this->form_validation->set_value('no_contract', $this->no_contract),
+				// ),
+				// "adendum_3" => array(
+        //   'type' => 'text',
+        //   'label' => "Adendum 3",
+        //   'value' => $this->form_validation->set_value('no_contract', $this->no_contract),
+				// ),
+				"date" => array(
+          'type' => 'date',
+          'label' => "Tanggal Kontrak",
+          'value' => $this->form_validation->set_value('date', $this->date),
         ),
         "company_name" => array(
           'type' => 'text',

@@ -2,8 +2,6 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 class Activity extends Uadmin_Controller {
 	private $services = null;
-    private $name = null;
-    private $parent_page = 'uadmin';
 	private $current_page = 'uadmin/activity/';
 	
 	public function __construct(){
@@ -473,12 +471,23 @@ class Activity extends Uadmin_Controller {
 			$data['no_news'] 			= $this->input->post( 'no_news' );
 			$data['duration'] 			= $this->input->post( 'duration' );
 			$data['status'] 			= $this->input->post( 'status' );
+			$data['date'] 				= date("Y-m-d", strtotime( $this->input->post( 'date' ) ));
+			$data['pagu_'] 				= $this->input->post( 'pagu_' );
 			
 			// var_dump($data);die;
 			if(  $activity_id = $this->activity_model->create( $data ) )
 			{
 				$budget_arr = array();
 				$sum = 0;
+				$budget_arr []= array(
+					'activity_id' => $activity_id,
+					'nominal' => 0,
+					'month' =>  1,
+					'year' => $data['year'] ,
+					'rpm_pln' => 0 , // 0 = rpm ; 1 = pln 
+					'status' => 0 , // 0 = planning ; 1 = realization
+				);
+				
 				foreach( $this->input->post( 'budget[]' ) as $index => $budget )
 				{
 					if( ! ( $budget == '0' || $budget == '' ) )
@@ -874,6 +883,9 @@ class Activity extends Uadmin_Controller {
 			$data['no_news'] 			= $this->input->post( 'no_news' );
 			$data['duration'] 			= $this->input->post( 'duration' );
 			$data['status'] 			= $this->input->post( 'status' );
+			$data['date'] 				= date("Y-m-d", strtotime( $this->input->post( 'date' ) ));
+			$data['pagu_'] 				= $this->input->post( 'pagu_' );
+
 			##############################################
 			# PLANNING VALIDATION
 			##############################################
@@ -961,7 +973,7 @@ class Activity extends Uadmin_Controller {
 			
 			$form_data_1 = $form[1];
 			
-			$form_data_1["form_data"]['pptk_id']['readonly'] = 'readonly';
+			// $form_data_1["form_data"]['pptk_id']['readonly'] = 'readonly';
 			$form_data_1 = $this->load->view('templates/form/plain_form_6', $form_data_1 , TRUE ) ;
 			
 			$form_data_3 = $form[3];
@@ -986,7 +998,7 @@ class Activity extends Uadmin_Controller {
 			$this->data["alert"] = (isset($alert)) ? $alert : NULL ;
 			$this->data["current_page"] = $this->current_page;
 			$this->data["block_header"] = "";
-			$this->data["header"] = "Tambah Kegiatan";
+			$this->data["header"] = "Ubah Kegiatan";
 			$this->data["sub_header"] = 'Klik Tombol Action Untuk Aksi Lebih Lanjut';
 			$this->render( "user/activity/content_form" );
         }

@@ -27,7 +27,7 @@ class Pptk extends Uadmin_Controller {
 		//set pagination
 		if ($pagination['total_records'] > 0 ) $this->data['pagination_links'] = $this->setPagination($pagination);
 		#################################################################3
-		$table = $this->services->get_table_config( $this->current_page );
+		$table = $this->services->get_table_config( $this->current_page, $pagination['start_record'] +1 );
 		$table[ "rows" ] = $this->pptk_model->pptks( $pagination['start_record'], $pagination['limit_per_page'] )->result();
 		$table = $this->load->view('templates/tables/plain_table', $table, true);
 		$this->data[ "contents" ] = $table;
@@ -40,6 +40,11 @@ class Pptk extends Uadmin_Controller {
 				"name" => array(
 					'type' => 'text',
 					'label' => "Nama Lengkap",
+					'value' => "",
+				),
+				"nip" => array(
+					'type' => 'text',
+					'label' => "NIP",
 					'value' => "",
 				),
 				"description" => array(
@@ -76,6 +81,7 @@ class Pptk extends Uadmin_Controller {
         if ($this->form_validation->run() === TRUE )
         {
 			$data['name'] = $this->input->post( 'name' );
+			$data['nip'] = $this->input->post( 'nip' );
 			$data['description'] = $this->input->post( 'description' );
 
 			if( $this->pptk_model->create( $data ) ){
@@ -102,6 +108,7 @@ class Pptk extends Uadmin_Controller {
         if ($this->form_validation->run() === TRUE )
         {
 			$data['name'] = $this->input->post( 'name' );
+			$data['nip'] = $this->input->post( 'nip' );
 			$data['description'] = $this->input->post( 'description' );
 
 			$data_param['id'] = $this->input->post( 'id' );

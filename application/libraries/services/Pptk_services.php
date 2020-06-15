@@ -15,6 +15,7 @@ class Pptk_services
   {
       $table["header"] = array(
         'name' => 'Nama Lengkap',
+        'nip' => 'NIP',
         'description' => 'Deskripsi',
       );
       $table["number"] = $start_number;
@@ -34,7 +35,11 @@ class Pptk_services
                     "name" => array(
                         'type' => 'text',
                         'label' => "Nama Lengkap",
-                    ),
+										),
+										"nip" => array(
+											'type' => 'text',
+											'label' => "NIP",
+										),
                     "description" => array(
                         'type' => 'textarea',
                         'label' => "Deskripsi",
